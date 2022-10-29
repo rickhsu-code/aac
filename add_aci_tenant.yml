@@ -4,7 +4,7 @@
   gather_facts: no
 
   tasks:
-    - name: ADD a new Tenant for aac test
+    - name: ADD a new Tenant
       cisco.aci.aci_tenant:
         hostname: '{{ inventory_hostname }}'
         validate_certs: no
