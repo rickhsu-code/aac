@@ -1,0 +1,10 @@
+---
+mappings:
+  - xls_sheet: firmware_group
+    key_element: name
+    elements:
+      - name: name
+        class: firmwareFwGrp
+        attribute: name
+        mandatory: true
+        unique: true

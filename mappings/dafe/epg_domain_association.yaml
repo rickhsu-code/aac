@@ -1,0 +1,46 @@
+---
+mappings:
+  - xls_sheet: epg_domain_association
+    key_element: domainName
+    elements:
+      - name: tenant
+        class: fvTenant
+        attribute: name
+        conditions:
+          - type: is_parent_parent_parent
+      - name: app_profile
+        class: fvAp
+        attribute: name
+        conditions:
+          - type: is_parent_parent
+      - name: epg_name
+        class: fvAEPg
+        attribute: name
+        conditions:
+          - type: is_parent
+      - name: domainType
+        class: fvRsDomAtt
+        attribute: tDn
+        map_attribute:
+          - attribute_regex: "/phys-"
+            mapped_value: physical
+          - attribute_regex: "vmmp-VMware/dom-"
+            mapped_value: vmm_vmware
+      - name: deployImedcy
+        class: fvRsDomAtt
+        attribute: instrImedcy
+      - name: domainName
+        class: fvRsDomAtt
+        attribute: tDn
+        attribute_match_regex: "(?<=/phys-).*|(?<=vmmp-VMware/dom-).*"
+        mandatory: true
+      - name: netflowPref
+        class: fvRsDomAtt
+        attribute: netflowPref
+      - name: staticVlanForVmm
+        class: fvRsDomAtt
+        attribute: encap
+        attribute_match_regex: "(?<=vlan-).*"
+      - name: resImedcy
+        class: fvRsDomAtt
+        attribute: resImedcy

@@ -1,0 +1,20 @@
+---
+mappings:
+  - xls_sheet: dns_provider
+    key_element: dns_server_address
+    elements:
+      - name: dns_profile_name
+        class: dnsProfile
+        attribute: name
+        conditions:
+          - type: is_parent
+      - name: dns_server_address
+        class: dnsProv
+        attribute: addr
+        mandatory: true
+      - name: dns_server_name
+        class: dnsProv
+        attribute: name
+      - name: is_preferred_dns
+        class: dnsProv
+        attribute: preferred

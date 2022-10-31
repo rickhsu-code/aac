@@ -1,0 +1,103 @@
+---
+mappings:
+  - xls_sheet: subject
+    key_element: filter
+    elements:
+      - name: tenant
+        class: fvTenant
+        attribute: name
+        conditions:
+          - type: is_parent_parent_parent
+      - name: contract
+        class: vzBrCP
+        attribute: name
+        mandatory: true
+        conditions:
+          - type: is_parent_parent
+      - name: description
+        class: vzSubj
+        attribute: descr
+        conditions:
+          - type: is_parent
+      - name: name
+        class: vzSubj
+        attribute: name
+        conditions:
+          - type: is_parent
+      - name: qos_class
+        class: vzSubj
+        attribute: prio
+        conditions:
+          - type: is_parent
+      - name: reverse_filter_port
+        class: vzSubj
+        attribute: revFltPorts
+        conditions:
+          - type: is_parent
+      - name: name_alias
+        class: vzSubj
+        attribute: nameAlias
+        conditions:
+          - type: is_parent
+      - name: target_dscp
+        class: vzSubj
+        attribute: targetDscp
+        conditions:
+          - type: is_parent
+      - name: filter
+        class: vzRsSubjFiltAtt
+        attribute: tnVzFilterName
+        mandatory: true
+      - name: contract_type
+        value: standard
+
+  - xls_sheet: subject
+    key_element: filter
+    elements:
+      - name: tenant
+        class: fvTenant
+        attribute: name
+        conditions:
+          - type: is_parent_parent_parent
+      - name: contract
+        class: vzOOBBrCP
+        attribute: name
+        mandatory: true
+        conditions:
+          - type: is_parent_parent
+      - name: description
+        class: vzSubj
+        attribute: descr
+        conditions:
+          - type: is_parent
+      - name: name
+        class: vzSubj
+        attribute: name
+        conditions:
+          - type: is_parent
+      - name: qos_class
+        class: vzSubj
+        attribute: prio
+        conditions:
+          - type: is_parent
+      - name: reverse_filter_port
+        class: vzSubj
+        attribute: revFltPorts
+        conditions:
+          - type: is_parent
+      - name: name_alias
+        class: vzSubj
+        attribute: nameAlias
+        conditions:
+          - type: is_parent
+      - name: target_dscp
+        class: vzSubj
+        attribute: targetDscp
+        conditions:
+          - type: is_parent
+      - name: filter
+        class: vzRsSubjFiltAtt
+        attribute: tnVzFilterName
+        mandatory: true
+      - name: contract_type
+        value: outofband

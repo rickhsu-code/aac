@@ -1,0 +1,1424 @@
+---
+files:
+  - name: fabric_policies.yaml
+    elements:
+      - name: apic
+        type: dict
+        elements:
+          - name: fabric_policies
+            type: dict
+            elements:
+              - name: apic_conn_pref
+                class: mgmtConnectivityPrefs
+                attribute: interfacePref
+                ignore_filter: true
+
+              - name: banners
+                type: dict
+                class: aaaPreLoginBanner
+                elements:
+                  - name: apic_gui_alias
+                    attribute: guiTextMessage
+                  - name: apic_gui_banner_url
+                    attribute: guiMessage
+                  - name: apic_cli_banner
+                    attribute: message
+                  - name: switch_cli_banner
+                    attribute: switchMessage
+
+              - name: ep_loop_protection
+                type: dict
+                class: epLoopProtectP
+                ignore_filter: true
+                elements:
+                  - name: admin_state
+                    attribute: adminSt
+                    ignore_filter: true
+                    map_boolean: true
+                  - name: detection_interval
+                    attribute: loopDetectIntvl
+                    ignore_filter: true
+                    type: int
+                  - name: detection_multiplier
+                    attribute: loopDetectMult
+                    ignore_filter: true
+                    type: int
+                  - name: action
+                    attribute: action
+                    ignore_filter: true
+
+              - name: rogue_ep_control
+                type: dict
+                class: epControlP
+                ignore_filter: true
+                elements:
+                  - name: admin_state
+                    attribute: adminSt
+                    ignore_filter: true
+                    map_boolean: true
+                  - name: detection_interval
+                    attribute: rogueEpDetectIntvl
+                    ignore_filter: true
+                    type: int
+                  - name: detection_multiplier
+                    attribute: rogueEpDetectMult
+                    ignore_filter: true
+                    type: int
+                  - name: hold_interval
+                    attribute: holdIntvl
+                    ignore_filter: true
+                    type: int
+
+              - name: global_settings
+                type: dict
+                class: infraSetPol
+                ignore_filter: true
+                elements:
+                  - name: domain_validation
+                    attribute: domainValidation
+                    ignore_filter: true
+                    map_boolean: true
+                  - name: enforce_subnet_check
+                    attribute: enforceSubnetCheck
+                    ignore_filter: true
+                    map_boolean: true
+                  - name: opflex_authentication
+                    attribute: opflexpAuthenticateClients
+                    ignore_filter: true
+                    map_boolean: true
+                  - name: disable_remote_endpoint_learn
+                    attribute: unicastXrEpLearnDisable
+                    ignore_filter: true
+                    map_boolean: true
+                  - name: overlapping_vlan_validation
+                    attribute: validateOverlappingVlans
+                    ignore_filter: true
+                    map_boolean: true
+                  - name: remote_leaf_direct
+                    attribute: enableRemoteLeafDirect
+                    ignore_filter: true
+                    map_boolean: true
+
+              - name: port_tracking
+                type: dict
+                class: infraPortTrackPol
+                ignore_filter: true
+                elements:
+                  - name: admin_state
+                    attribute: adminSt
+                    ignore_filter: true
+                    map_boolean: true
+                  - name: delay
+                    attribute: delay
+                    ignore_filter: true
+                    type: int
+                  - name: min_links
+                    attribute: minlinks
+                    ignore_filter: true
+                    type: int
+
+              - name: ptp_admin_state
+                class: latencyPtpMode
+                attribute: state
+                map_boolean: true
+
+              - name: ip_aging
+                class: epIpAgingP
+                attribute: adminSt
+                ignore_filter: true
+                map_boolean: true
+
+              - name: ignore_acked_faults
+                class: healthEvalP
+                attribute: ignoreAckedFaults
+                ignore_filter: true
+                map_boolean: true
+
+              - name: use_infra_gipo
+                class: fmcastSystemGIPoPol
+                attribute: useConfiguredSystemGIPo
+                ignore_filter: true
+                map_boolean: true
+
+              - name: fabric_isis_redistribute_metric
+                class: isisDomPol
+                attribute: redistribMetric
+                ignore_filter: true
+                type: int
+
+              - name: fabric_isis_bfd
+                class: l3IfPol
+                attribute: bfdIsis
+                ignore_filter: true
+                map_boolean: true
+
+              - name: date_time_format
+                type: dict
+                class: datetimeFormat
+                ignore_filter: true
+                elements:
+                  - name: display_format
+                    attribute: displayFormat
+                    ignore_filter: true
+                  - name: timezone
+                    attribute: tz
+                    ignore_filter: true
+                  - name: show_offset
+                    attribute: showOffset
+                    ignore_filter: true
+                    map_boolean: true
+
+              - name: dns_policies
+                type: list_dict
+                key_element: name
+                class: dnsProfile
+                ignore_filter: true
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                    ignore_filter: true
+                  - name: mgmt_epg
+                    class: dnsRsProfileToEpg
+                    attribute: tDn
+                    map_attribute:
+                      - attribute_regex: default/oob
+                        mapped_value: 'oob'
+                      - attribute_regex: default/inb
+                        mapped_value: 'inb'
+                  - name: providers
+                    type: list_dict
+                    class: dnsProv
+                    elements:
+                      - name: ip
+                        attribute: addr
+                      - name: preferred
+                        attribute: preferred
+                        map_boolean: true
+                  - name: domains
+                    type: list_dict
+                    key_element: name
+                    class: dnsDomain
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: default
+                        attribute: isDefault
+                        map_boolean: true
+
+              - name: err_disabled_recovery
+                type: dict
+                class: edrErrDisRecoverPol
+                ignore_filter: true
+                elements:
+                  - name: interval
+                    attribute: errDisRecovIntvl
+                    ignore_filter: true
+                    type: int
+                  - name: mcp_loop
+                    class: edrEventP
+                    attribute: recover
+                    map_boolean: true
+                    conditions:
+                      - type: match
+                        match_attribute: event
+                        match_regex: 'event-mcp-loop'
+                  - name: ep_move
+                    class: edrEventP
+                    attribute: recover
+                    map_boolean: true
+                    conditions:
+                      - type: match
+                        match_attribute: event
+                        match_regex: 'event-ep-move'
+                  - name: bpdu_guard
+                    class: edrEventP
+                    attribute: recover
+                    map_boolean: true
+                    conditions:
+                      - type: match
+                        match_attribute: event
+                        match_regex: 'event-bpduguard'
+
+              - name: coop_group_policy
+                class: coopPol
+                attribute: type
+                ignore_filter: true
+
+              - name: infra_dscp_translation_policy
+                type: dict
+                class: qosDscpTransPol
+                ignore_filter: true
+                elements:
+                  - name: admin_state
+                    attribute: adminSt
+                    ignore_filter: true
+                    map_boolean: true
+                  - name: control_plane
+                    attribute: control
+                    ignore_filter: true
+                  - name: policy_plane
+                    attribute: policy
+                    ignore_filter: true
+                  - name: span
+                    attribute: span
+                    ignore_filter: true
+                  - name: traceroute
+                    attribute: traceroute
+                    ignore_filter: true
+                  - name: level_1
+                    attribute: level1
+                    ignore_filter: true
+                  - name: level_2
+                    attribute: level2
+                    ignore_filter: true
+                  - name: level_3
+                    attribute: level3
+                    ignore_filter: true
+                  - name: level_4
+                    attribute: level4
+                    ignore_filter: true
+                  - name: level_5
+                    attribute: level5
+                    ignore_filter: true
+                  - name: level_6
+                    attribute: level6
+                    ignore_filter: true
+
+              - name: aaa
+                type: dict
+                class: aaaAuthRealm
+                elements:
+                  - name: remote_user_login_policy
+                    attribute: defRolePolicy
+                  - name: default_fallback_check
+                    class: aaaDefaultAuth
+                    attribute: fallbackCheck
+                    default_value: false
+                    map_attribute:
+                      - attribute_regex: 'true'
+                        mapped_value: true
+                  - name: default_realm
+                    class: aaaDefaultAuth
+                    attribute: realm
+                  - name: default_login_domain
+                    class: aaaDefaultAuth
+                    attribute: providerGroup
+                  - name: console_realm
+                    class: aaaConsoleAuth
+                    attribute: realm
+                  - name: console_login_domain
+                    class: aaaConsoleAuth
+                    attribute: providerGroup
+                  - name: tacacs_providers
+                    type: list_dict
+                    class: aaaTacacsPlusProvider
+                    query_scope: global
+                    elements:
+                      - name: hostname_ip
+                        attribute: name
+                      - name: description
+                        attribute: descr
+                      - name: port
+                        attribute: port
+                        type: int
+                      - name: protocol
+                        attribute: authProtocol
+                      - name: key
+                        attribute: key
+                      - name: timeout
+                        attribute: timeout
+                        type: int
+                      - name: retries
+                        attribute: retries
+                        type: int
+                      - name: mgmt_epg
+                        class: aaaRsSecProvToEpg
+                        attribute: tDn
+                        map_attribute:
+                          - attribute_regex: default/oob
+                            mapped_value: 'oob'
+                          - attribute_regex: default/inb
+                            mapped_value: 'inb'
+                      - name: monitoring
+                        attribute: monitorServer
+                        map_boolean: true
+                      - name: monitoring_username
+                        attribute: monitoringUser
+                      - name: monitoring_password
+                        attribute: monitoringPassword
+                  - name: users
+                    type: list_dict
+                    class: aaaUser
+                    query_scope: global
+                    conditions:
+                      - type: no_match
+                        match_regex: '^admin$'
+                        match_attribute: name
+                    elements:
+                      - name: username
+                        attribute: name
+                      - name: password
+                        attribute: pwd
+                      - name: expires
+                        attribute: expires
+                        map_boolean: true
+                      - name: expire_date
+                        attribute: expiration
+                      - name: first_name
+                        attribute: firstName
+                      - name: last_name
+                        attribute: lastName
+                      - name: phone
+                        attribute: phone
+                      - name: email
+                        attribute: email
+                      - name: certificate_name
+                        attribute: certAttribute
+                      - name: description
+                        attribute: descr
+                      - name: status
+                        attribute: accountStatus
+                      - name: domains
+                        type: list_dict
+                        class: aaaUserDomain
+                        elements:
+                          - name: name
+                            type: string
+                            attribute: name
+                          - name: roles
+                            type: list_dict
+                            class: aaaUserRole
+                            elements:
+                              - name: name
+                                type: string
+                                attribute: name
+                              - name: privilege_type
+                                attribute: privType
+                                default_value: read
+                                map_attribute:
+                                  - attribute_regex: writePriv
+                                    mapped_value: 'write'
+                      - name: certificates
+                        type: list_dict
+                        class: aaaUserCert
+                        elements:
+                          - name: name
+                            type: string
+                            attribute: name
+                          - name: data
+                            attribute: data
+                      - name: ssh_keys
+                        type: list_dict
+                        class: aaaSshAuth
+                        elements:
+                          - name: name
+                            type: string
+                            attribute: name
+                          - name: data
+                            attribute: data
+                  - name: ca_certificates
+                    type: list_dict
+                    class: pkiTP
+                    query_scope: global
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: description
+                        attribute: descr
+                      - name: certificate_chain
+                        attribute: certChain
+                  - name: key_rings
+                    type: list_dict
+                    class: pkiKeyRing
+                    query_scope: global
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: description
+                        attribute: descr
+                      - name: modulus
+                        attribute: modulus
+                      - name: ca_certificate
+                        attribute: tp
+                      - name: certificate
+                        attribute: cert
+                      - name: private_key
+                        attribute: key
+                  - name: login_domains
+                    type: list_dict
+                    class: aaaLoginDomain
+                    key_element: name
+                    query_scope: global
+                    conditions:
+                      - type: match
+                        match_regex: '^local$'
+                        match_attribute: name
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: realm
+                        class: aaaDomainAuth
+                        attribute: realm
+                      - name: description
+                        attribute: descr
+                      - name: name
+                        type: string
+                        class: aaaDomainAuth
+                        attribute: providerGroup
+                  - name: login_domains
+                    type: list_dict
+                    class: aaaLoginDomain
+                    key_element: name
+                    query_scope: global
+                    conditions:
+                      - type: match_child
+                        class: aaaDomainAuth
+                        match_regex: '^tacacs$'
+                        match_attribute: realm
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: realm
+                        class: aaaDomainAuth
+                        attribute: realm
+                      - name: description
+                        attribute: descr
+                      - name: name
+                        type: string
+                        class: aaaDomainAuth
+                        attribute: providerGroup
+                      - name: tacacs_providers
+                        type: list_dict
+                        class: aaaProviderRef
+                        query_scope: global
+                        conditions:
+                          - type: match_parent
+                            class: aaaTacacsPlusProviderGroup
+                            match_regex: '%%key%%'
+                            match_attribute: dn
+                          - type: match_parent
+                            class: aaaTacacsPlusProviderGroup
+                            match_regex: '%%key%%'
+                            match_attribute: dn
+                        elements:
+                          - name: hostname_ip
+                            attribute: name
+                          - name: priority
+                            attribute: order
+                            type: int
+
+              - name: remote_locations
+                type: list_dict
+                class: fileRemotePath
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                  - name: description
+                    attribute: descr
+                  - name: hostname_ip
+                    attribute: host
+                  - name: protocol
+                    attribute: protocol
+                  - name: path
+                    attribute: remotePath
+                  - name: port
+                    attribute: remotePort
+                    type: int
+                  - name: auth_type
+                    attribute: authType
+                    default_value: password
+                    map_attribute:
+                      - attribute_regex: useSshKeyContents
+                        mapped_value: ssh_keys
+                  - name: username
+                    attribute: userName
+                  - name: password
+                    attribute: userPasswd
+                  - name: ssh_private_key
+                    attribute: identityPrivateKeyContents
+                  - name: ssh_public_key
+                    attribute: identityPublicKeyContents
+                  - name: ssh_passphrase
+                    attribute: identityPrivateKeyPassphrase
+                  - name: mgmt_epg
+                    class: fileRsARemoteHostToEpg
+                    attribute: tDn
+                    map_attribute:
+                      - attribute_regex: default/oob
+                        mapped_value: 'oob'
+                      - attribute_regex: default/inb
+                        mapped_value: 'inb'
+
+              - name: schedulers
+                type: list_dict
+                class: trigSchedP
+                conditions:
+                  - type: match_parent
+                    class: fabricInst
+                    match_regex: ''
+                    match_attribute: ''
+                  - type: no_match
+                    match_regex: '^ConstCatSchedP$'
+                    match_attribute: name
+                  - type: no_match
+                    match_regex: '^ConstSchedP$'
+                    match_attribute: name
+                  - type: no_match
+                    match_regex: '^EveryEightHours$'
+                    match_attribute: name
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                  - name: description
+                    attribute: descr
+                  - name: recurring_windows
+                    type: list_dict
+                    class: trigRecurrWindowP
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: day
+                        attribute: day
+                      - name: hour
+                        type: int
+                        attribute: hour
+                      - name: minute
+                        type: int
+                        attribute: minute
+
+              - name: config_exports
+                type: list_dict
+                class: configExportP
+                conditions:
+                  - type: no_match
+                    match_regex: '^DailyAutoBackup$'
+                    match_attribute: name
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                  - name: description
+                    attribute: descr
+                  - name: format
+                    attribute: format
+                  - name: remote_location
+                    class: configRsRemotePath
+                    attribute: tnFileRemotePathName
+                  - name: scheduler
+                    class: configRsExportScheduler
+                    attribute: tnTrigSchedPName
+
+              - name: monitoring
+                type: dict
+                elements:
+                  - name: snmp_traps
+                    type: list_dict
+                    class: snmpGroup
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: description
+                        attribute: descr
+                      - name: destinations
+                        type: list_dict
+                        class: snmpTrapDest
+                        elements:
+                          - name: hostname_ip
+                            attribute: host
+                          - name: port
+                            type: int
+                            attribute: port
+                          - name: version
+                            attribute: ver
+                          - name: community
+                            attribute: secName
+                          - name: security
+                            attribute: v3SecLvl
+                          - name: mgmt_epg
+                            class: fileRsARemoteHostToEpg
+                            attribute: tDn
+                            map_attribute:
+                              - attribute_regex: default/oob
+                                mapped_value: 'oob'
+                              - attribute_regex: default/inb
+                                mapped_value: 'inb'
+                  - name: syslogs
+                    type: list_dict
+                    class: syslogGroup
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: description
+                        attribute: descr
+                      - name: admin_state
+                        class: syslogProf
+                        attribute: adminState
+                        map_boolean: true
+                      - name: format
+                        attribute: format
+                      - name: show_millisecond
+                        attribute: includeMilliSeconds
+                        default_value: false
+                        map_attribute:
+                          - attribute_regex: yes
+                            mapped_value: true
+                      - name: local_admin_state
+                        class: syslogFile
+                        attribute: adminState
+                        map_boolean: true
+                      - name: local_severity
+                        class: syslogFile
+                        attribute: severity
+                      - name: console_admin_state
+                        class: syslogConsole
+                        attribute: adminState
+                        map_boolean: true
+                      - name: console_severity
+                        class: syslogConsole
+                        attribute: severity
+                      - name: destinations
+                        type: list_dict
+                        class: syslogRemoteDest
+                        elements:
+                          - name: hostname_ip
+                            attribute: host
+                          - name: port
+                            type: int
+                            attribute: port
+                          - name: admin_state
+                            attribute: adminState
+                            map_boolean: true
+                          - name: facility
+                            attribute: forwardingFacility
+                          - name: severity
+                            attribute: severity
+                          - name: mgmt_epg
+                            class: fileRsARemoteHostToEpg
+                            attribute: tDn
+                            map_attribute:
+                              - attribute_regex: default/oob
+                                mapped_value: 'oob'
+                              - attribute_regex: default/inb
+                                mapped_value: 'inb'
+
+              - name: fabric_bgp_as
+                type: int
+                class: bgpAsP
+                attribute: asn
+                conditions:
+                  - type: match_parent
+                    class: bgpInstPol
+                    match_regex: ''
+                    match_attribute: dn
+
+              - name: fabric_bgp_rr
+                type: list_int
+                class: bgpRRNodePEp
+                attribute: id
+                conditions:
+                  - type: match_parent
+                    class: bgpRRP
+                    match_attribute: ''
+                    match_regex: ''
+
+              - name: fabric_bgp_ext_rr
+                type: list_int
+                class: bgpRRNodePEp
+                attribute: id
+                conditions:
+                  - type: match_parent
+                    class: bgpExtRRP
+                    match_attribute: ''
+                    match_regex: ''
+
+              - name: pod_policies
+                type: dict
+                elements:
+                  - name: date_time_policies
+                    type: list_dict
+                    class: datetimePol
+                    ignore_filter: true
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                        ignore_filter: true
+                      - name: ntp_admin_state
+                        attribute: adminSt
+                        ignore_filter: true
+                        map_boolean: true
+                      - name: ntp_auth_state
+                        attribute: authSt
+                        ignore_filter: true
+                        map_boolean: true
+                      - name: apic_ntp_server_state
+                        attribute: serverState
+                        ignore_filter: true
+                        map_boolean: true
+                      - name: apic_ntp_server_master_mode
+                        attribute: masterMode
+                        ignore_filter: true
+                        map_boolean: true
+                      - name: apic_ntp_server_master_stratum
+                        attribute: StratumValue
+                        type: int
+                        ignore_filter: true
+                      - name: ntp_servers
+                        type: list_dict
+                        class: datetimeNtpProv
+                        elements:
+                          - name: hostname_ip
+                            attribute: name
+                          - name: auth_key_id
+                            type: int
+                            class: datetimeRsNtpProvToNtpAuthKey
+                            attribute: tnDatetimeNtpAuthKeyId
+                          - name: preferred
+                            attribute: preferred
+                            map_boolean: true
+                          - name: mgmt_epg
+                            class: datetimeRsNtpProvToEpg
+                            attribute: tDn
+                            map_attribute:
+                              - attribute_regex: default/oob
+                                mapped_value: 'oob'
+                              - attribute_regex: default/inb
+                                mapped_value: 'inb'
+                      - name: ntp_keys
+                        type: list_dict
+                        class: datetimeNtpAuthKey
+                        elements:
+                          - name: id
+                            type: int
+                            attribute: id
+                          - name: key
+                            attribute: key
+                          - name: auth_type
+                            attribute: keyType
+                          - name: trusted
+                            attribute: trusted
+                            map_boolean: true
+                  - name: snmp_policies
+                    type: list_dict
+                    key_element: name
+                    class: snmpPol
+                    ignore_filter: true
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                        ignore_filter: true
+                      - name: admin_state
+                        attribute: adminSt
+                        ignore_filter: true
+                        map_boolean: true
+                      - name: location
+                        attribute: loc
+                        ignore_filter: true
+                      - name: contact
+                        attribute: contact
+                        ignore_filter: true
+                      - name: users
+                        type: list_dict
+                        key_element: name
+                        class: snmpUserP
+                        elements:
+                          - name: name
+                            type: string
+                            attribute: name
+                          - name: privacy_type
+                            attribute: privType
+                          - name: privacy_key
+                            attribute: privKey
+                          - name: authorization_type
+                            attribute: authType
+                          - name: authorization_key
+                            attribute: authKey
+                      - name: communities
+                        type: list
+                        class: snmpCommunityP
+                        attribute: name
+                      - name: trap_forwarders
+                        type: list_dict
+                        class: snmpTrapFwdServerP
+                        elements:
+                          - name: ip
+                            attribute: addr
+                          - name: port
+                            attribute: port
+                      - name: clients
+                        type: list_dict
+                        key_element: name
+                        class: snmpClientGrpP
+                        elements:
+                          - name: name
+                            type: string
+                            attribute: name
+                          - name: mgmt_epg
+                            class: snmpRsEpg
+                            attribute: tDn
+                            map_attribute:
+                              - attribute_regex: default/oob
+                                mapped_value: 'oob'
+                              - attribute_regex: default/inb
+                                mapped_value: 'inb'
+                          - name: entries
+                            type: list_dict
+                            key_element: name
+                            class: snmpClientP
+                            elements:
+                              - name: name
+                                type: string
+                                attribute: name
+                              - name: ip
+                                attribute: addr
+                  - name: management_access_policies
+                    type: list_dict
+                    key_element: name
+                    class: commPol
+                    ignore_filter: true
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                        ignore_filter: true
+                      - name: description
+                        attribute: descr
+                        ignore_filter: true
+                      - name: ssh
+                        type: dict
+                        class: commSsh
+                        elements:
+                          - name: admin_state
+                            attribute: adminSt
+                            map_boolean: true
+                          - name: password_auth
+                            attribute: passwordAuth
+                            map_boolean: true
+                          - name: port
+                            attribute: port
+                            type: int
+                          - name: aes128_ctr
+                            attribute: sshCiphers
+                            map_attribute:
+                              - attribute_regex: aes128-ctr
+                                mapped_value: true
+                            default_value: false
+                          - name: aes128_gcm
+                            attribute: sshCiphers
+                            map_attribute:
+                              - attribute_regex: aes128-gcm@openssh.com
+                                mapped_value: true
+                            default_value: false
+                          - name: aes192_ctr
+                            attribute: sshCiphers
+                            map_attribute:
+                              - attribute_regex: aes192-ctr
+                                mapped_value: true
+                            default_value: false
+                          - name: aes256_ctr
+                            attribute: sshCiphers
+                            map_attribute:
+                              - attribute_regex: aes256-ctr
+                                mapped_value: true
+                            default_value: false
+                          - name: chacha
+                            attribute: sshCiphers
+                            map_attribute:
+                              - attribute_regex: chacha20-poly1305@openssh.com
+                                mapped_value: true
+                            default_value: false
+                          - name: hmac_sha1
+                            attribute: sshMacs
+                            map_attribute:
+                              - attribute_regex: hmac-sha1
+                                mapped_value: true
+                            default_value: false
+                          - name: hmac_sha2_256
+                            attribute: sshMacs
+                            map_attribute:
+                              - attribute_regex: hmac-sha2-256
+                                mapped_value: true
+                            default_value: false
+                          - name: hmac_sha2_512
+                            attribute: sshMacs
+                            map_attribute:
+                              - attribute_regex: hmac-sha2-512
+                                mapped_value: true
+                            default_value: false
+                      - name: telnet
+                        type: dict
+                        class: commTelnet
+                        elements:
+                          - name: admin_state
+                            attribute: adminSt
+                            map_boolean: true
+                          - name: port
+                            attribute: port
+                            type: int
+                      - name: https
+                        type: dict
+                        class: commHttps
+                        elements:
+                          - name: admin_state
+                            attribute: adminSt
+                            map_boolean: true
+                          - name: client_cert_auth_state
+                            attribute: clientCertAuthState
+                            map_boolean: true
+                          - name: dh
+                            attribute: dhParam
+                          - name: port
+                            attribute: port
+                            type: int
+                          - name: tlsv1
+                            attribute: sslProtocols
+                            map_attribute:
+                              - attribute_regex: TLSv1(?!\.)
+                                mapped_value: true
+                            default_value: false
+                          - name: tlsv1_1
+                            attribute: sslProtocols
+                            map_attribute:
+                              - attribute_regex: TLSv1\.1
+                                mapped_value: true
+                            default_value: false
+                          - name: tlsv1_2
+                            attribute: sslProtocols
+                            map_attribute:
+                              - attribute_regex: TLSv1\.2
+                                mapped_value: true
+                            default_value: false
+                          - name: key_ring
+                            attribute: tnPkiKeyRingName
+                            class: commRsKeyRing
+                      - name: http
+                        type: dict
+                        class: commHttp
+                        elements:
+                          - name: admin_state
+                            attribute: adminSt
+                            map_boolean: true
+                          - name: port
+                            attribute: port
+                            type: int
+              - name: pod_policy_groups
+                type: list_dict
+                key_element: name
+                class: fabricPodPGrp
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                  - name: snmp_policy
+                    class: fabricRsSnmpPol
+                    attribute: tnSnmpPolName
+                  - name: date_time_policy
+                    class: fabricRsTimePol
+                    attribute: tnDatetimePolName
+                  - name: management_access_policy
+                    class: fabricRsCommPol
+                    attribute: tnCommPolName
+
+              - name: pod_profiles
+                type: list_dict
+                key_element: name
+                class: fabricPodP
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                  - name: selectors
+                    type: list_dict
+                    key_element: name
+                    class: fabricPodS
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: policy
+                        class: fabricRsPodPGrp
+                        attribute: tDn
+                        attribute_match_regex: '(?<=/podpgrp-).*'
+                      - name: pod_blocks
+                        type: list_dict
+                        key_element: name
+                        class: fabricPodBlk
+                        elements:
+                          - name: name
+                            type: string
+                            attribute: name
+                          - name: from
+                            type: int
+                            attribute: from_
+                          - name: to
+                            type: int
+                            attribute: to_
+                            default_element: from
+
+              - name: switch_policies
+                type: dict
+                elements:
+                  - name: psu_policies
+                    type: list_dict
+                    key_element: name
+                    class: psuInstPol
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: admin_state
+                        attribute: adminRdnM
+                        map_attribute:
+                          - attribute_regex: comb
+                            mapped_value: combined
+                          - attribute_regex: rdn
+                            mapped_value: nnred
+                          - attribute_regex: ps-rdn
+                            mapped_value: n1red
+                  - name: node_control_policies
+                    type: list_dict
+                    key_element: name
+                    class: fabricNodeControl
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: dom
+                        attribute: control
+                        map_attribute:
+                          - attribute_regex: Dom
+                            mapped_value: true
+                        default_value: false
+                      - name: telemetry
+                        attribute: featureSel
+
+              - name: leaf_switch_policy_groups
+                type: list_dict
+                key_element: name
+                class: fabricLeNodePGrp
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                  - name: psu_policy
+                    class: fabricRsPsuInstPol
+                    attribute: tnPsuInstPolName
+                  - name: node_control_policy
+                    class: fabricRsNodeCtrl
+                    attribute: tnFabricNodeControlName
+
+              - name: spine_switch_policy_groups
+                type: list_dict
+                key_element: name
+                class: fabricSpNodePGrp
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                  - name: psu_policy
+                    class: fabricRsPsuInstPol
+                    attribute: tnPsuInstPolName
+                  - name: node_control_policy
+                    class: fabricRsNodeCtrl
+                    attribute: tnFabricNodeControlName
+
+              - name: leaf_switch_profiles
+                type: list_dict
+                key_element: name
+                class: fabricLeafP
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                  - name: selectors
+                    type: list_dict
+                    key_element: name
+                    class: fabricLeafS
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: policy
+                        class: fabricRsLeNodePGrp
+                        attribute: tDn
+                        attribute_match_regex: '(?<=/lenodepgrp-).*'
+                      - name: node_blocks
+                        type: list_dict
+                        key_element: name
+                        class: fabricNodeBlk
+                        elements:
+                          - name: name
+                            type: string
+                            attribute: name
+                          - name: from
+                            type: int
+                            attribute: from_
+                          - name: to
+                            type: int
+                            attribute: to_
+                            default_element: from
+                  - name: interface_profiles
+                    type: list
+                    class: fabricRsLePortP
+                    attribute: tDn
+                    attribute_match_regex: '(?<=/leportp-).*'
+
+              - name: spine_switch_profiles
+                type: list_dict
+                key_element: name
+                class: fabricSpineP
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                  - name: selectors
+                    type: list_dict
+                    key_element: name
+                    class: fabricSpineS
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: policy
+                        class: fabricRsSpNodePGrp
+                        attribute: tDn
+                        attribute_match_regex: '(?<=/spnodepgrp-).*'
+                      - name: node_blocks
+                        type: list_dict
+                        key_element: name
+                        class: fabricNodeBlk
+                        elements:
+                          - name: name
+                            type: string
+                            attribute: name
+                          - name: from
+                            type: int
+                            attribute: from_
+                          - name: to
+                            type: int
+                            attribute: to_
+                            default_element: from
+                  - name: interface_profiles
+                    type: list
+                    class: fabricRsSpPortP
+                    attribute: tDn
+                    attribute_match_regex: '(?<=/spportp-).*'
+
+              - name: leaf_interface_profiles
+                type: list_dict
+                key_element: name
+                class: fabricLePortP
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+
+              - name: spine_interface_profiles
+                type: list_dict
+                key_element: name
+                class: fabricSpPortP
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+
+              - name: external_connectivity_policy
+                type: dict
+                class: fvFabricExtConnP
+                ignore_filter: true
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                    ignore_filter: true
+                  - name: fabric_id
+                    type: int
+                    attribute: id
+                  - name: site_id
+                    type: int
+                    attribute: siteId
+                  - name: route_target
+                    attribute: rt
+                    ignore_filter: true
+                  - name: bgp_password
+                    class: fvPeeringP
+                    attribute: password
+                  - name: routing_profiles
+                    type: list_dict
+                    key_element: name
+                    class: l3extFabricExtRoutingP
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: subnets
+                        type: list
+                        class: l3extSubnet
+                        attribute: ip
+
+              - name: vmware_vmm_domains
+                type: list_dict
+                key_element: name
+                class: vmmDomP
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                  - name: access_mode
+                    attribute: accessMode
+                  - name: delimiter
+                    attribute: delimiter
+                  - name: tag_collection
+                    attribute: enableTag
+                    map_boolean: true
+                  - name: vlan_pool
+                    class: infraRsVlanNs
+                    attribute: tDn
+                    attribute_match_regex: '(?<=/vlanns-\[).*(?=\]-dynamic)'
+                  - name: vswitch
+                    type: dict
+                    elements:
+                      - name: cdp_policy
+                        class: vmmRsVswitchOverrideCdpIfPol
+                        attribute: tDn
+                        attribute_match_regex: '(?<=/cdpIfP-).*'
+                      - name: lldp_policy
+                        class: vmmRsVswitchOverrideLldpIfPol
+                        attribute: tDn
+                        attribute_match_regex: '(?<=/lldpIfP-).*'
+                      - name: port_channel_policy
+                        class: vmmRsVswitchOverrideLacpPol
+                        attribute: tDn
+                        attribute_match_regex: '(?<=/lacplagp-).*'
+                  - name: credential_policies
+                    type: list_dict
+                    key_element: name
+                    class: vmmUsrAccP
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: username
+                        attribute: usr
+                      - name: password
+                        attribute: pwd
+                  - name: vcenters
+                    type: list_dict
+                    key_element: name
+                    class: vmmCtrlrP
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: hostname_ip
+                        attribute: hostOrIp
+                      - name: datacenter
+                        attribute: rootContName
+                      - name: dvs_version
+                        attribute: dvsVersion
+                      - name: statistics
+                        attribute: statsMode
+                        map_boolean: true
+                      - name: credential_policy
+                        class: vmmRsAcc
+                        attribute: tDn
+                        attribute_match_regex: '(?<=/usracc-).*'
+                      - name: mgmt_epg
+                        class: vmmRsMgmtEPg
+                        attribute: tDn
+                        map_attribute:
+                          - attribute_regex: default/inb
+                            mapped_value: 'inb'
+
+              - name: geolocation
+                type: dict
+                elements:
+                  - name: sites
+                    type: list_dict
+                    class: geoSite
+                    ignore_filter: true
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                        ignore_filter: true
+                      - name: description
+                        attribute: descr
+                        ignore_filter: true
+                      - name: buildings
+                        type: list_dict
+                        class: geoBuilding
+                        ignore_filter: true
+                        elements:
+                          - name: name
+                            type: string
+                            attribute: name
+                            ignore_filter: true
+                          - name: description
+                            attribute: descr
+                            ignore_filter: true
+                          - name: floors
+                            type: list_dict
+                            class: geoFloor
+                            ignore_filter: true
+                            elements:
+                              - name: name
+                                type: string
+                                attribute: name
+                                ignore_filter: true
+                              - name: description
+                                attribute: descr
+                                ignore_filter: true
+                              - name: rooms
+                                type: list_dict
+                                class: geoRoom
+                                ignore_filter: true
+                                elements:
+                                  - name: name
+                                    type: string
+                                    attribute: name
+                                    ignore_filter: true
+                                  - name: description
+                                    attribute: descr
+                                    ignore_filter: true
+                                  - name: rows
+                                    type: list_dict
+                                    class: geoRow
+                                    ignore_filter: true
+                                    elements:
+                                      - name: name
+                                        type: string
+                                        attribute: name
+                                        ignore_filter: true
+                                      - name: description
+                                        attribute: descr
+                                        ignore_filter: true
+                                      - name: racks
+                                        type: list_dict
+                                        class: geoRack
+                                        ignore_filter: true
+                                        elements:
+                                          - name: name
+                                            type: string
+                                            attribute: name
+                                            ignore_filter: true
+                                          - name: description
+                                            attribute: descr
+                                            ignore_filter: true
+                                          - name: nodes
+                                            type: list_int
+                                            class: geoRsNodeLocation
+                                            attribute: tDn
+                                            attribute_match_regex: '(?<=/node-).*'

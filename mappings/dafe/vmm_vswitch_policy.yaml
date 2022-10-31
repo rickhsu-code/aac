@@ -1,0 +1,53 @@
+---
+mappings:
+  - xls_sheet: vmm_vswitch_policy
+    key_element: vmm_domain_name
+    elements:
+      - name: vmm_domain_name
+        class: vmmDomP
+        attribute: name
+        mandatory: true
+        unique: true
+        conditions:
+          - type: match_parent
+            class: vmmProvP
+            match_attribute: dn
+            match_regex: "uni/vmmp-VMware"
+      - name: port_channel_policy
+        class: vmmRsVswitchOverrideLacpPol
+        attribute: tDn
+        attribute_match_regex: "(?<=infra/lacplagp-).*"
+        conditions:
+          - type: is_child_child
+      - name: cdp_policy
+        class: vmmRsVswitchOverrideCdpIfPol
+        attribute: tDn
+        attribute_match_regex: "(?<=infra/cdpIfP-).*"
+        conditions:
+          - type: is_child_child
+      - name: lldp_policy
+        class: vmmRsVswitchOverrideLldpIfPol
+        attribute: tDn
+        attribute_match_regex: "(?<=infra/lldpIfP-).*"
+        conditions:
+          - type: is_child_child
+      - name: enhanced_lag_policy_name
+        class: lacpEnhancedLagPol
+        attribute: name
+        conditions:
+          - type: is_child_child
+      - name: enhanced_lag_mode
+        class: lacpEnhancedLagPol
+        attribute: mode
+        conditions:
+          - type: is_child_child
+      - name: enhanced_lag_lb_mode
+        class: lacpEnhancedLagPol
+        attribute: lbmode
+        conditions:
+          - type: is_child_child
+      - name: enhanced_lag_number_of_links
+        class: lacpEnhancedLagPol
+        attribute: numLinks
+        conditions:
+          - type: is_child_child

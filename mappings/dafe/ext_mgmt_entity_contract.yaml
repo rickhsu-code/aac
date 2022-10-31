@@ -1,0 +1,18 @@
+---
+mappings:
+  - xls_sheet: ext_mgmt_entity_contract
+    key_element: oob_contract_name
+    elements:
+      - name: external_management_profile_name
+        class: mgmtInstP
+        attribute: name
+        mandatory: true
+        conditions:
+          - type: is_parent
+      - name: contract_qos_class
+        class: mgmtRsOoBCons
+        attribute: prio
+      - name: oob_contract_name
+        class: mgmtRsOoBCons
+        attribute: tnVzOOBBrCPName
+        mandatory: true

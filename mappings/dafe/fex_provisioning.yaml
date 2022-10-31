@@ -1,0 +1,45 @@
+---
+mappings:
+  - xls_sheet: fex_provisioning
+    key_element: fex_id
+    elements:
+      - name: fex_id
+        class: infraRsAccBaseGrp
+        attribute: fexId
+        mandatory: true
+        unique: true
+      - name: parent_leaf_id
+        class: infraRsAccBaseGrp
+        attribute: tDn
+      - name: from_port
+        class: infraPortBlk
+        attribute: fromPort
+        conditions:
+          - type: match_neighbor
+            class: infraRsAccBaseGrp
+            match_attribute: fexId
+            match_regex: '%%key%%'
+      - name: to_port
+        class: infraPortBlk
+        attribute: toPort
+        conditions:
+          - type: match_neighbor
+            class: infraRsAccBaseGrp
+            match_attribute: fexId
+            match_regex: '%%key%%'
+      - name: from_slot
+        class: infraPortBlk
+        attribute: fromCard
+        conditions:
+          - type: match_neighbor
+            class: infraRsAccBaseGrp
+            match_attribute: fexId
+            match_regex: '%%key%%'
+      - name: to_slot
+        class: infraPortBlk
+        attribute: toCard
+        conditions:
+          - type: match_neighbor
+            class: infraRsAccBaseGrp
+            match_attribute: fexId
+            match_regex: '%%key%%'

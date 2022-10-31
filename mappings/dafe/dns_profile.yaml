@@ -1,0 +1,29 @@
+---
+mappings:
+  - xls_sheet: dns_profile
+    key_element: name
+    elements:
+      - name: name
+        class: dnsProfile
+        attribute: name
+        mandatory: true
+        unique: true
+      - name: description
+        class: dnsProfile
+        attribute: descr
+      - name: management_epg
+        class: dnsRsProfileToEpg
+        attribute: tDn
+        attribute_match_regex: '(?<=mgmtp-default/).*(?=-default)'
+        conditions:
+          - type: is_child
+      - name: domain_name
+        class: dnsDomain
+        attribute: name
+        conditions:
+          - type: is_child
+      - name: is_default_domain
+        class: dnsDomain
+        attribute: isDefault
+        conditions:
+          - type: is_child

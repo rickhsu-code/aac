@@ -1,0 +1,57 @@
+---
+mappings:
+  - xls_sheet: sg_device
+    key_element: name
+    elements:
+      - name: tenant
+        class: fvTenant
+        attribute: name
+        conditions:
+          - type: is_parent
+      - name: name
+        class: vnsLDevVip
+        attribute: name
+      - name: contextAware
+        class: vnsLDevVip
+        attribute: contextAware
+      - name: devtype
+        class: vnsLDevVip
+        attribute: devtype
+      - name: funcType
+        class: vnsLDevVip
+        attribute: funcType
+      - name: isCopy
+        class: vnsLDevVip
+        attribute: isCopy
+      - name: promMode
+        class: vnsLDevVip
+        attribute: promMode
+      - name: svcType
+        class: vnsLDevVip
+        attribute: svcType
+      - name: trunking
+        class: vnsLDevVip
+        attribute: trunking
+      - name: devtype
+        class: vnsRsALDevToPhysDomP
+        map_class_value: 'PHYSICAL'
+        default_value: 'VIRTUAL'
+        conditions:
+          - type: is_neighbor
+      - name: phyDomain
+        class: vnsRsALDevToPhysDomP
+        attribute: tDn
+        attribute_match_regex: '(?<=uni/phys-).*'
+        conditions:
+          - type: is_neighbor
+      - name: virtualswitchingMode
+        class: vnsRsALDevToDomP
+        attribute: switchingMode
+        conditions:
+          - type: is_neighbor
+      - name: VMMDomain
+        class: vnsRsALDevToDomP
+        attribute: tDn
+        attribute_match_regex: '(?<=uni/vmmp-VMware/dom-).*'
+        conditions:
+          - type: is_neighbor

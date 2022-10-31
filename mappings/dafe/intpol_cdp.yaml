@@ -1,0 +1,16 @@
+---
+mappings:
+  - xls_sheet: intpol_cdp
+    key_element: name
+    elements:
+      - name: name
+        class: cdpIfPol
+        attribute: name
+        mandatory: true
+        unique: true
+      - name: description
+        class: cdpIfPol
+        attribute: descr
+      - name: cdp_state
+        class: cdpIfPol
+        attribute: adminSt

@@ -1,0 +1,69 @@
+---
+mappings:
+  - xls_sheet: domain
+    key_element: name
+    elements:
+      - name: name
+        class: physDomP
+        attribute: name
+        mandatory: true
+        unique: true
+      - name: vlan_pool
+        class: infraRsVlanNs
+        attribute: tDn
+        attribute_match_regex: '(?<=infra/vlanns-\[).*(?=\]-static)'
+        conditions:
+          - type: is_child
+      - name: type
+        value: physical
+
+  - xls_sheet: domain
+    key_element: name
+    elements:
+      - name: name
+        class: l3extDomP
+        attribute: name
+        mandatory: true
+        unique: true
+      - name: vlan_pool
+        class: infraRsVlanNs
+        attribute: tDn
+        attribute_match_regex: '(?<=infra/vlanns-\[).*(?=\]-static)'
+        conditions:
+          - type: is_child
+      - name: type
+        value: external_l3
+
+  - xls_sheet: domain
+    key_element: name
+    elements:
+      - name: name
+        class: l2extDomP
+        attribute: name
+        mandatory: true
+        unique: true
+      - name: vlan_pool
+        class: infraRsVlanNs
+        attribute: tDn
+        attribute_match_regex: '(?<=infra/vlanns-\[).*(?=\]-static)'
+        conditions:
+          - type: is_child
+      - name: type
+        value: external_l2
+
+  - xls_sheet: domain
+    key_element: name
+    elements:
+      - name: name
+        class: vmmDomP
+        attribute: name
+        mandatory: true
+        unique: true
+      - name: vlan_pool
+        class: infraRsVlanNs
+        attribute: tDn
+        attribute_match_regex: '(?<=infra/vlanns-\[).*(?=\]-dynamic)'
+        conditions:
+          - type: is_child
+      - name: type
+        value: vmm_vmware

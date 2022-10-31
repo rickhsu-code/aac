@@ -1,0 +1,73 @@
+---
+mappings:
+  - xls_sheet: access_leaf_policy_group
+    key_element: name
+    elements:
+      - name: name
+        class: infraAccNodePGrp
+        attribute: name
+        mandatory: true
+        unique: true
+      - name: description
+        class: infraAccNodePGrp
+        attribute: descr
+      - name: spanning_tree_policy
+        class: infraRsMstInstPol
+        attribute: tnStpInstPolName
+        conditions:
+          - type: is_child
+      - name: bfd_ipv4_policy
+        class: infraRsBfdIpv4InstPol
+        attribute: tnBfdIpv4InstPolName
+        conditions:
+          - type: is_child
+      - name: bfd_ipv6_policy
+        class: infraRsBfdIpv6InstPol
+        attribute: tnBfdIpv6InstPolName
+        conditions:
+          - type: is_child
+      - name: fibre_channel_node_policy
+        class: infraRsFcInstPol
+        attribute: tnFcInstPolName
+        conditions:
+          - type: is_child
+      - name: fibre_channel_san_policy
+        class: infraRsFcFabricPol
+        attribute: tnFcFabricPolName
+        conditions:
+          - type: is_child
+      - name: monitoring_policy
+        class: infraRsMonNodeInfraPol
+        attribute: tnMonInfraPolName
+        conditions:
+          - type: is_child
+      - name: netflow_node_policy
+        class: infraRsNetflowNodePol
+        attribute: tnNetflowNodePolName
+        conditions:
+          - type: is_child
+      - name: leaf_copp_policy
+        class: infraRsLeafCoppProfile
+        attribute: tnCoppLeafProfileName
+        conditions:
+          - type: is_child
+      - name: forward_scale_profile
+        class: infraRsTopoctrlFwdScaleProfPol
+        attribute: tnTopoctrlFwdScaleProfilePolName
+        conditions:
+          - type: is_child
+      - name: fast_link_failover_policy
+        class: infraRsTopoctrlFastLinkFailoverInstPol
+        attribute: tnTopoctrlFastLinkFailoverInstPolName
+        conditions:
+          - type: is_child
+      - name: do1x_node_auth_policy
+        class: infraRsL2NodeAuthPol
+        attribute: tnL2NodeAuthPolName
+        conditions:
+          - type: is_child
+      - name: copp_pre_filter_policy
+        class: infraRsIaclLeafProfile
+        attribute: tnIaclLeafProfileName
+        conditions:
+          - type: is_child

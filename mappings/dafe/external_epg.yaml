@@ -1,0 +1,36 @@
+---
+mappings:
+  - xls_sheet: external_epg
+    key_element: name
+    elements:
+      - name: tenant
+        class: fvTenant
+        attribute: name
+        mandatory: true
+        conditions:
+          - type: is_parent_parent
+          - type: match
+            class: fvTenant
+            match_attribute: name
+            match_regex: '^((?!infra).)*$'
+      - name: l3_out
+        class: l3extOut
+        attribute: name
+        conditions:
+          - type: is_parent
+      - name: description
+        class: l3extInstP
+        attribute: descr
+      - name: prefered_group_member
+        class: l3extInstP
+        attribute: prefGrMemb
+      - name: name
+        class: l3extInstP
+        attribute: name
+        mandatory: true
+      - name: qos_class
+        class: l3extInstP
+        attribute: prio
+      - name: target_dscp
+        class: l3extInstP
+        attribute: targetDscp

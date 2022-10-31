@@ -1,0 +1,53 @@
+---
+mappings:
+  - xls_sheet: vrf_contract
+    key_element: contract
+    elements:
+      - name: tenant
+        class: fvTenant
+        attribute: name
+        conditions:
+          - type: is_parent_parent_parent
+      - name: vrf_name
+        class: fvCtx
+        attribute: name
+        mandatory: true
+        conditions:
+          - type: is_parent_parent
+      - name: contract_qos_class
+        class: vzRsAnyToCons
+        attribute: prio
+      - name: contract
+        class: vzRsAnyToCons
+        attribute: tnVzBrCPName
+        mandatory: true
+      - name: consumed_ctr
+        value: 'yes'
+      - name: provided_ctr
+        value: 'no'
+
+  - xls_sheet: vrf_contract
+    key_element: contract
+    elements:
+      - name: tenant
+        class: fvTenant
+        attribute: name
+        conditions:
+          - type: is_parent_parent_parent
+      - name: vrf_name
+        class: fvCtx
+        attribute: name
+        mandatory: true
+        conditions:
+          - type: is_parent_parent
+      - name: contract_qos_class
+        class: vzRsAnyToProv
+        attribute: prio
+      - name: contract
+        class: vzRsAnyToProv
+        attribute: tnVzBrCPName
+        mandatory: true
+      - name: consumed_ctr
+        value: 'no'
+      - name: provided_ctr
+        value: 'yes'

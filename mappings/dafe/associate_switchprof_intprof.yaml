@@ -1,0 +1,39 @@
+---
+mappings:
+  - xls_sheet: associate_switchprof_intprof
+    key_element: interface_profile
+    elements:
+      - name: switch_profile
+        class: infraNodeP
+        attribute: name
+        mandatory: true
+        conditions:
+          - type: is_parent
+      - name: interface_profile
+        class: infraRsAccPortP
+        attribute: tDn
+        attribute_match_regex: '(?<=/accportprof-).*'
+        mandatory: true
+      - name: switch_profile_type
+        value: leaf
+      - name: interface_profile_type
+        value: leaf
+
+  - xls_sheet: associate_switchprof_intprof
+    key_element: interface_profile
+    elements:
+      - name: switch_profile
+        class: infraSpineP
+        attribute: name
+        mandatory: true
+        conditions:
+          - type: is_parent
+      - name: interface_profile
+        class: infraRsSpAccPortP
+        attribute: tDn
+        attribute_match_regex: '(?<=/spaccportprof-).*'
+        mandatory: true
+      - name: switch_profile_type
+        value: spine
+      - name: interface_profile_type
+        value: spine

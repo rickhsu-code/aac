@@ -1,0 +1,20 @@
+---
+mappings:
+  - xls_sheet: application_profile
+    key_element: name
+    elements:
+      - name: tenant
+        class: fvTenant
+        attribute: name
+        conditions:
+          - type: is_parent
+      - name: description
+        class: fvAp
+        attribute: descr
+      - name: name
+        class: fvAp
+        attribute: name
+        mandatory: true
+      - name: qos_class
+        class: fvAp
+        attribute: prio

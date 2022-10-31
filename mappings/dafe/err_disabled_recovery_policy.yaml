@@ -1,0 +1,34 @@
+---
+mappings:
+  - xls_sheet: err_disabled_recovery_policy
+    key_element: errdis_recovery_interval
+    elements:
+      - name: errdis_recovery_interval
+        class: edrErrDisRecoverPol
+        attribute: errDisRecovIntvl
+        mandatory: true
+        unique: true
+      - name: recover_events_endpoint_move
+        class: edrEventP
+        attribute: recover
+        conditions:
+          - type: is_child
+          - type: match
+            match_attribute: event
+            match_regex: 'event-ep-move'
+      - name: recover_events_endpoint_bpduguard
+        class: edrEventP
+        attribute: recover
+        conditions:
+          - type: is_child
+          - type: match
+            match_attribute: event
+            match_regex: 'event-bpduguard'
+      - name: recover_events_mcp_loop
+        class: edrEventP
+        attribute: recover
+        conditions:
+          - type: is_child
+          - type: match
+            match_attribute: event
+            match_regex: 'event-mcp-loop'

@@ -1,0 +1,18 @@
+---
+mappings:
+  - xls_sheet: oob_mgmt_epg_contract
+    key_element: contract
+    elements:
+      - name: name
+        class: mgmtOoB
+        attribute: name
+        mandatory: true
+        conditions:
+          - type: is_parent
+      - name: contract_qos_class
+        class: mgmtRsOoBProv
+        attribute: prio
+      - name: contract
+        class: mgmtRsOoBProv
+        attribute: tnVzOOBBrCPName
+        mandatory: true

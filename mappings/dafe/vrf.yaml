@@ -1,0 +1,74 @@
+---
+mappings:
+  - xls_sheet: vrf
+    key_element: name
+    elements:
+      - name: tenant
+        class: fvTenant
+        attribute: name
+        conditions:
+          - type: is_parent
+      - name: description
+        class: fvCtx
+        attribute: descr
+      - name: name
+        class: fvCtx
+        attribute: name
+        mandatory: true
+      - name: policy_enforcement
+        class: fvCtx
+        attribute: pcEnfPref
+      - name: policy_enforcement_direction
+        class: fvCtx
+        attribute: pcEnfDir
+      - name: bgp_timers
+        class: fvRsBgpCtxPol
+        attribute: tnBgpCtxPolName
+        conditions:
+          - type: is_child
+      - name: route_tag_policy
+        class: fvRsCtxToExtRouteTagPol
+        attribute: tnL3extRouteTagPolName
+        conditions:
+          - type: is_child
+      - name: ospf_timers
+        class: fvRsOspfCtxPol
+        attribute: tnOspfCtxPolName
+        conditions:
+          - type: is_child
+      - name: monitoring_policy
+        class: fvRsCtxMonPol
+        attribute: tnMonEPGPolName
+        conditions:
+          - type: is_child
+      - name: endpoint_retention_policy
+        class: fvRsCtxToEpRet
+        attribute: tnFvEpRetPolName
+        conditions:
+          - type: is_child
+      - name: dns_label
+        class: dnsLbl
+        attribute: name
+        conditions:
+          - type: is_child
+      - name: golf_vrf_name
+        class: l3extGlobalCtxName
+        attribute: name
+        conditions:
+          - type: is_child
+      - name: bgp_context_ipv4
+        class: fvRsCtxToBgpCtxAfPol
+        attribute: tnBgpCtxAfPolName
+        conditions:
+          - type: is_child
+          - type: match
+            match_attribute: af
+            match_regex: 'ipv4-ucast'
+      - name: bgp_context_ipv6
+        class: fvRsCtxToBgpCtxAfPol
+        attribute: tnBgpCtxAfPolName
+        conditions:
+          - type: is_child
+          - type: match
+            match_attribute: af
+            match_regex: 'ipv6-ucast'

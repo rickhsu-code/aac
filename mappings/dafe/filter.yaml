@@ -1,0 +1,14 @@
+---
+mappings:
+  - xls_sheet: filter
+    key_element: name
+    elements:
+      - name: tenant
+        class: fvTenant
+        attribute: name
+        conditions:
+          - type: is_parent
+      - name: name
+        class: vzFilter
+        attribute: name
+        mandatory: true

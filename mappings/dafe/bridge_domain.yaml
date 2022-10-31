@@ -1,0 +1,83 @@
+---
+mappings:
+  - xls_sheet: bridge_domain
+    key_element: name
+    elements:
+      - name: tenant
+        class: fvTenant
+        attribute: name
+        conditions:
+          - type: is_parent
+      - name: l3_unknown_multicast
+        class: fvBD
+        attribute: unkMcastAct
+      - name: endpoint_move_detect_mode
+        class: fvBD
+        attribute: epMoveDetectMode
+      - name: endpoint_data_plane_learning
+        class: fvBD
+        attribute: ipLearning
+      - name: enablePim
+        class: fvBD
+        attribute: mcastAllow
+      - name: l2_unknown_unicast
+        class: fvBD
+        attribute: unkMacUcastAct
+      - name: unicast_routing
+        class: fvBD
+        attribute: unicastRoute
+      - name: name
+        class: fvBD
+        attribute: name
+        mandatory: true
+      - name: name_alias
+        class: fvBD
+        attribute: nameAlias
+      - name: multi_dest_flood
+        class: fvBD
+        attribute: multiDstPktAct
+      - name: limit_ip_learning_to_subnet
+        class: fvBD
+        attribute: limitIpLearnToSubnets
+      - name: description
+        class: fvBD
+        attribute: descr
+      - name: arp_flood
+        class: fvBD
+        attribute: arpFlood
+      - name: legacy_bd_vlan
+        class: fvAccP
+        attribute: encap
+        conditions:
+          - type: is_child
+      - name: vrf
+        class: fvRsCtx
+        attribute: tnFvCtxName
+        conditions:
+          - type: is_child
+      - name: igmp_snoop_policy
+        class: fvRsIgmpsn
+        attribute: tnIgmpSnoopPolName
+        conditions:
+          - type: is_child
+      - name: 'endpoint_retention _policy'
+        class: fvRsBdToEpRet
+        attribute: tnFvEpRetPolName
+        conditions:
+          - type: is_child
+      - name: igmpInterfacePolicy
+        class: igmpRsIfPol
+        attribute: tDn
+        attribute_match_regex: '(?<=/igmpIfPol-).*'
+        conditions:
+          - type: is_child_child
+      - name: l3out_for_route_control
+        class: fvRsBDToProfile
+        attribute: tnL3extOutName
+        conditions:
+          - type: is_child
+      - name: route_control_profile
+        class: fvRsBDToProfile
+        attribute: tnRtctrlProfileName
+        conditions:
+          - type: is_child

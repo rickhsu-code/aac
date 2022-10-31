@@ -1,0 +1,37 @@
+---
+mappings:
+  - xls_sheet: syslog_group
+    key_element: name
+    elements:
+      - name: description
+        class: syslogGroup
+        attribute: descr
+      - name: name
+        class: syslogGroup
+        attribute: name
+        mandatory: true
+      - name: syslog_prof_admin_state
+        class: syslogProf
+        attribute: adminState
+        conditions:
+          - type: is_child
+      - name: syslog_local_file_admin_state
+        class: syslogFile
+        attribute: adminState
+        conditions:
+          - type: is_child
+      - name: local_file_severity_level
+        class: syslogFile
+        attribute: severity
+        conditions:
+          - type: is_child
+      - name: syslog_console_admin_state
+        class: syslogConsole
+        attribute: adminState
+        conditions:
+          - type: is_child
+      - name: console_severity_level
+        class: syslogConsole
+        attribute: severity
+        conditions:
+          - type: is_child

@@ -1,0 +1,21 @@
+---
+mappings:
+  - xls_sheet: ep_loop_protection_ip_aging
+    key_element: ep_loop_state
+    elements:
+      - name: ep_loop_state
+        class: epLoopProtectP
+        attribute: adminSt
+        mandatory: true
+      - name: ep_loop_detect_interval
+        class: epLoopProtectP
+        attribute: loopDetectIntvl
+      - name: ep_loop_detect_mult
+        class: epLoopProtectP
+        attribute: loopDetectMult
+      - name: ep_loop_action
+        class: epLoopProtectP
+        attribute: action
+      - name: ip_aging_state
+        class: epIpAgingP
+        attribute: adminSt

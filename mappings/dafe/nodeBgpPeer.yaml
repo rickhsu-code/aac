@@ -1,0 +1,79 @@
+---
+mappings:
+  - xls_sheet: nodeBgpPeer
+    key_element: bgp_peer_ip
+    elements:
+      - name: tenant
+        class: fvTenant
+        attribute: name
+        conditions:
+          - type: is_parent_parent_parent
+      - name: l3out
+        class: l3extOut
+        attribute: name
+        conditions:
+          - type: is_parent_parent
+      - name: l3out_node_profile
+        class: l3extLNodeP
+        attribute: name
+        conditions:
+          - type: is_parent
+      - name: isGolfPeer
+        value: "yes"
+      - name: bgp_peer_ip
+        class: bgpInfraPeerP
+        attribute: addr
+        mandatory: true
+      - name: bgp_peer_name
+        class: bgpInfraPeerP
+        attribute: descr
+      - name: ttl
+        class: bgpInfraPeerP
+        attribute: ttl
+      - name: remote_bgp_as
+        class: bgpAsP
+        attribute: asn
+        conditions:
+          - type: is_child
+
+  - xls_sheet: nodeBgpPeer
+    key_element: bgp_peer_ip
+    elements:
+      - name: tenant
+        class: fvTenant
+        attribute: name
+        conditions:
+          - type: is_parent_parent_parent
+      - name: l3out
+        class: l3extOut
+        attribute: name
+        conditions:
+          - type: is_parent_parent
+      - name: l3out_node_profile
+        class: l3extLNodeP
+        attribute: name
+        mandatory: true
+        conditions:
+          - type: is_parent
+      - name: isGolfPeer
+        value: "no"
+      - name: bgp_peer_ip
+        class: bgpPeerP
+        attribute: addr
+        mandatory: true
+      - name: bgp_peer_name
+        class: bgpPeerP
+        attribute: descr
+      - name: ttl
+        class: bgpPeerP
+        attribute: ttl
+      - name: remote_bgp_as
+        class: bgpAsP
+        attribute: asn
+        conditions:
+          - type: is_child
+      - name: local_bgp_as
+        class: bgpLocalAsnP
+        attribute: localAsn
+        conditions:
+          - type: is_child

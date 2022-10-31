@@ -1,0 +1,71 @@
+---
+mappings:
+  - xls_sheet: switch_profile
+    key_element: name
+    elements:
+      - name: name
+        class: infraNodeP
+        attribute: name
+        mandatory: true
+        unique: true
+      - name: description
+        class: infraNodeP
+        attribute: descr
+      - name: switch_selector
+        class: infraLeafS
+        attribute: name
+        conditions:
+          - type: is_child                                                                                                                                                                                                                                                                                                                                                                       
+      - name: switch_policy_group
+        class: infraRsAccNodePGrp
+        attribute: tDn
+        attribute_match_regex: '(?<=accnodepgrp-).*'
+        conditions:
+          - type: is_child_child
+      - name: from_node_id
+        class: infraNodeBlk
+        attribute: from_
+        conditions:
+          - type: is_child_child
+      - name: to_node_id
+        class: infraNodeBlk
+        attribute: to_
+        conditions:
+          - type: is_child_child
+      - name: switch_profile_type
+        value: leaf
+
+  - xls_sheet: switch_profile
+    key_element: name
+    elements:
+      - name: name
+        class: infraSpineP
+        attribute: name
+        mandatory: true
+        unique: true
+      - name: description
+        class: infraSpineP
+        attribute: descr
+      - name: switch_selector
+        class: infraSpineS
+        attribute: name
+        conditions:
+          - type: is_child
+      - name: switch_policy_group
+        class: infraRsSpineAccNodePGrp
+        attribute: tDn
+        attribute_match_regex: '(?<=spaccnodepgrp-).*'
+        conditions:
+          - type: is_child_child
+      - name: from_node_id
+        class: infraNodeBlk
+        attribute: from_
+        conditions:
+          - type: is_child_child
+      - name: to_node_id
+        class: infraNodeBlk
+        attribute: to_
+        conditions:
+          - type: is_child_child
+      - name: switch_profile_type
+        value: spine

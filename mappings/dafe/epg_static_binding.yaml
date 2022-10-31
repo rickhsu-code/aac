@@ -1,0 +1,99 @@
+---
+mappings:
+  - xls_sheet: epg_static_binding
+    key_element: static_binding_type
+    elements:
+      - name: tenant
+        class: fvTenant
+        attribute: name
+        conditions:
+          - type: is_parent_parent_parent
+      - name: app_profile
+        class: fvAp
+        attribute: name
+        conditions:
+          - type: is_parent_parent
+      - name: name
+        class: fvAEPg
+        attribute: name
+        conditions:
+          - type: is_parent
+      - name: static_binding_type
+        class: fvRsPathAtt
+        attribute: tDn
+        map_attribute:
+          - attribute_regex: '/protpaths-'
+            mapped_value: vPC
+          - attribute_regex: '/pathep-\[(?!eth)'
+            mapped_value: PC
+        default_value: ''
+        mandatory: true
+      - name: pod_id
+        class: fvRsPathAtt
+        attribute: tDn
+        attribute_match_regex: '(?<=topology/pod-)\d+(?=/p)'
+      - name: left_node_id
+        class: fvRsPathAtt
+        attribute: tDn
+        attribute_match_regex: '(?<=paths-)\d+'
+      - name: right_node_id
+        class: fvRsPathAtt
+        attribute: tDn
+        attribute_match_regex: '(?<=\d-)\d+(?=/pathep-\[)'
+      - name: interface_policy_group
+        class: fvRsPathAtt
+        attribute: tDn
+        attribute_match_regex: '(?<=pathep-\[).*(?=\])'
+      - name: mode
+        class: fvRsPathAtt
+        attribute: mode
+      - name: encap_vlan_id
+        class: fvRsPathAtt
+        attribute: encap
+        attribute_match_regex: '(?<=vlan-).*'
+
+  - xls_sheet: epg_static_binding
+    key_element: static_binding_type
+    elements:
+      - name: tenant
+        class: fvTenant
+        attribute: name
+        conditions:
+          - type: is_parent_parent_parent
+      - name: app_profile
+        class: fvAp
+        attribute: name
+        conditions:
+          - type: is_parent_parent
+      - name: name
+        class: fvAEPg
+        attribute: name
+        conditions:
+          - type: is_parent
+      - name: static_binding_type
+        class: fvRsPathAtt
+        attribute: tDn
+        map_attribute:
+          - attribute_regex: '/pathep-\[eth'
+            mapped_value: Access
+        default_value: ''
+        mandatory: true
+      - name: pod_id
+        class: fvRsPathAtt
+        attribute: tDn
+        attribute_match_regex: '(?<=topology/pod-)\d+(?=/p)'
+      - name: left_node_id
+        class: fvRsPathAtt
+        attribute: tDn
+        attribute_match_regex: '(?<=paths-)\d+'
+      - name: access_port_id
+        class: fvRsPathAtt
+        attribute: tDn
+        attribute_match_regex: '(?<=pathep-\[eth).*(?=\])'
+      - name: mode
+        class: fvRsPathAtt
+        attribute: mode
+      - name: encap_vlan_id
+        class: fvRsPathAtt
+        attribute: encap
+        attribute_match_regex: '(?<=vlan-).*'

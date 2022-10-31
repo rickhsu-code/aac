@@ -1,0 +1,835 @@
+---
+files:
+  - name: access_policies.yaml
+    elements:
+      - name: apic
+        type: dict
+        elements:
+          - name: access_policies
+            type: dict
+            elements:
+              - name: infra_vlan
+                class: infraRsFuncToEpg
+                type: int
+                attribute: encap
+                attribute_match_regex: '(?<=vlan-).*'
+
+              - name: mcp
+                class: mcpInstPol
+                type: dict
+                ignore_filter: true
+                elements:
+                  - name: admin_state
+                    attribute: adminSt
+                    ignore_filter: true
+                    map_boolean: true
+                  - name: per_vlan
+                    attribute: ctrl
+                    ignore_filter: true
+                    default_value: false
+                    map_attribute:
+                      - attribute_regex: 'pdu-per-vlan'
+                        mapped_value: true
+                  - name: initial_delay
+                    attribute: initDelayTime
+                    ignore_filter: true
+                  - name: key
+                    attribute: key
+                    ignore_filter: true
+                  - name: loop_detection
+                    attribute: loopDetectMult
+                    ignore_filter: true
+                  - name: action
+                    attribute: loopProtectAct
+                    ignore_filter: true
+                    default_value: false
+                    map_attribute:
+                      - attribute_regex: 'port-disable'
+                        mapped_value: true
+                  - name: frequency_sec
+                    attribute: txFreq
+                    ignore_filter: true
+                  - name: frequency_msec
+                    attribute: txFreqMsec
+                    ignore_filter: true
+
+              - name: qos
+                type: dict
+                elements:
+                  - name: qos_classes
+                    class: qosClass
+                    type: list_dict
+                    key_element: level
+                    elements:
+                      - name: level
+                        type: int
+                        attribute: prio
+                        attribute_match_regex: '(?<=level).*'
+                      - name: admin_state
+                        attribute: admin
+                        default_list_element: level
+                        map_boolean: true
+                      - name: mtu
+                        type: int
+                        attribute: mtu
+                        default_list_element: level
+                      - name: scheduling
+                        class: qosSched
+                        attribute: meth
+                        map_attribute:
+                          - attribute_regex: 'wrr'
+                            mapped_value: 'wrr'
+                          - attribute_regex: 'sp'
+                            mapped_value: 'strict-priority'
+                        default_list_element: level
+                      - name: bandwidth_percent
+                        type: int
+                        class: qosSched
+                        attribute: bw
+                        default_list_element: level
+                      - name: congestion_algorithm
+                        class: qosCong
+                        attribute: algo
+                        default_list_element: level
+
+              - name: vlan_pools
+                class: fvnsVlanInstP
+                type: list_dict
+                key_element: name
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                  - name: allocation
+                    attribute: allocMode
+                  - name: ranges
+                    class: fvnsEncapBlk
+                    type: list_dict
+                    elements:
+                      - name: from
+                        type: int
+                        attribute: from
+                        attribute_match_regex: '(?<=vlan-).*'
+                      - name: to
+                        type: int
+                        attribute: to
+                        default_element: from
+                        attribute_match_regex: '(?<=vlan-).*'
+                      - name: allocation
+                        attribute: allocMode
+                      - name: role
+                        attribute: role
+
+              - name: physical_domains
+                class: physDomP
+                type: list_dict
+                key_element: name
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                    map_attribute:
+                      - attribute_regex: 'phys'
+                        mapped_value: ''
+                  - name: vlan_pool
+                    class: infraRsVlanNs
+                    attribute: tDn
+                    attribute_match_regex: '(?<=/vlanns-\[).*(?=\]-dynamic|\]-static)'
+
+              - name: routed_domains
+                class: l3extDomP
+                type: list_dict
+                key_element: name
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                  - name: vlan_pool
+                    class: infraRsVlanNs
+                    attribute: tDn
+                    attribute_match_regex: '(?<=/vlanns-\[).*(?=\]-dynamic|\]-static)'
+
+              - name: aaeps
+                class: infraAttEntityP
+                type: list_dict
+                key_element: name
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                  - name: infra_vlan
+                    class: infraRsFuncToEpg
+                    map_class_value: true
+                    default_value: false
+                    conditions:
+                      - type: match_parent
+                        class: infraProvAcc
+                        match_attribute: ''
+                        match_regex: ''
+                  - name: physical_domains
+                    class: infraRsDomP
+                    type: list
+                    attribute: tDn
+                    attribute_match_regex: '(?<=/phys-).*'
+                  - name: routed_domains
+                    class: infraRsDomP
+                    type: list
+                    attribute: tDn
+                    attribute_match_regex: '(?<=/l3dom-).*'
+                  - name: vmware_vmm_domains
+                    class: infraRsDomP
+                    type: list
+                    attribute: tDn
+                    attribute_match_regex: '(?<=/vmmp-VMware/dom-).*'
+                  - name: endpoint_groups
+                    class: infraRsFuncToEpg
+                    type: list_dict
+                    key_element: vlan
+                    conditions:
+                      - type: match_parent
+                        class: infraGeneric
+                        match_attribute: ''
+                        match_regex: ''
+                    elements:
+                      - name: tenant
+                        type: string
+                        attribute: tDn
+                        attribute_match_regex: '(?<=uni/tn-).*?(?=/)'
+                      - name: application_profile
+                        type: string
+                        attribute: tDn
+                        attribute_match_regex: '(?<=/ap-).*?(?=/)'
+                      - name: endpoint_group
+                        type: string
+                        attribute: tDn
+                        attribute_match_regex: '(?<=/epg-).*'
+                      - name: vlan
+                        type: int
+                        attribute: encap
+                        attribute_match_regex: '(?<=vlan-).*'
+                        conditions:
+                          - type: match
+                            match_attribute: primaryEncap
+                            match_regex: '^unknown$'
+                      - name: primary_vlan
+                        type: int
+                        attribute: primaryEncap
+                        attribute_match_regex: '(?<=vlan-).*'
+                      - name: secondary_vlan
+                        type: int
+                        attribute: encap
+                        attribute_match_regex: '(?<=vlan-).*'
+                        conditions:
+                          - type: match
+                            match_attribute: primaryEncap
+                            match_regex: '(?<=vlan-).*'
+                      - name: mode
+                        attribute: mode
+                      - name: deployment_immediacy
+                        attribute: instrImedcy
+
+              - name: switch_policies
+                type: dict
+                elements:
+                  - name: mst_policies
+                    class: stpMstRegionPol
+                    type: list_dict
+                    key_element: name
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: region
+                        attribute: regName
+                      - name: revision
+                        type: int
+                        attribute: rev
+                      - name: instances
+                        class: stpMstDomPol
+                        type: list_dict
+                        key_element: name
+                        elements:
+                          - name: name
+                            type: string
+                            attribute: name
+                          - name: id
+                            type: int
+                            attribute: id
+                          - name: vlan_ranges
+                            class: fvnsEncapBlk
+                            type: list_dict
+                            elements:
+                              - name: from
+                                type: int
+                                attribute: from
+                                attribute_match_regex: '(?<=vlan-).*'
+                              - name: to
+                                type: int
+                                attribute: to
+                                attribute_match_regex: '(?<=vlan-).*'
+                                default_element: from
+                  - name: vpc_policies
+                    class: vpcInstPol
+                    type: list_dict
+                    key_element: name
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: peer_dead_interval
+                        type: int
+                        attribute: deadIntvl
+                  - name: forwarding_scale_policies
+                    class: topoctrlFwdScaleProfilePol
+                    type: list_dict
+                    key_element: name
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: profile
+                        attribute: profType
+
+              - name: leaf_switch_policy_groups
+                class: infraAccNodePGrp
+                type: list_dict
+                key_element: name
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                  - name: forwarding_scale_policy
+                    class: infraRsTopoctrlFwdScaleProfPol
+                    attribute: tnTopoctrlFwdScaleProfilePolName
+
+              - name: leaf_switch_profiles
+                class: infraNodeP
+                type: list_dict
+                key_element: name
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                  - name: selectors
+                    type: list_dict
+                    key_element: name
+                    class: infraLeafS
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: policy
+                        class: infraRsAccNodePGrp
+                        attribute: tDn
+                        attribute_match_regex: '(?<=/accnodepgrp-).*'
+                      - name: node_blocks
+                        type: list_dict
+                        key_element: name
+                        class: infraNodeBlk
+                        elements:
+                          - name: name
+                            type: string
+                            attribute: name
+                          - name: from
+                            attribute: from_
+                            type: int
+                          - name: to
+                            attribute: to_
+                            default_element: from
+                            type: int
+                  - name: interface_profiles
+                    type: list
+                    class: infraRsAccPortP
+                    attribute: tDn
+                    attribute_match_regex: '(?<=/accportprof-).*'
+
+              - name: spine_switch_profiles
+                type: list_dict
+                key_element: name
+                class: infraSpineP
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                  - name: selectors
+                    type: list_dict
+                    key_element: name
+                    class: infraSpineS
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: node_blocks
+                        type: list_dict
+                        key_element: name
+                        class: infraNodeBlk
+                        elements:
+                          - name: name
+                            type: string
+                            attribute: name
+                          - name: from
+                            attribute: from_
+                            type: int
+                          - name: to
+                            attribute: to_
+                            default_element: from
+                            type: int
+                  - name: interface_profiles
+                    type: list
+                    class: infraRsSpAccPortP
+                    attribute: tDn
+                    attribute_match_regex: '(?<=/spaccportprof-).*'
+
+              - name: interface_policies
+                type: dict
+                elements:
+                  - name: cdp_policies
+                    class: cdpIfPol
+                    type: list_dict
+                    key_element: name
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: admin_state
+                        attribute: adminSt
+                        map_boolean: true
+                  - name: lldp_policies
+                    class: lldpIfPol
+                    type: list_dict
+                    key_element: name
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: admin_rx_state
+                        attribute: adminRxSt
+                        map_boolean: true
+                      - name: admin_tx_state
+                        attribute: adminTxSt
+                        map_boolean: true
+                  - name: link_level_policies
+                    class: fabricHIfPol
+                    type: list_dict
+                    key_element: name
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: speed
+                        attribute: speed
+                      - name: auto
+                        type: string
+                        attribute: autoNeg
+                        map_boolean: true
+                      - name: fec_mode
+                        attribute: fecMode
+                  - name: port_channel_policies
+                    class: lacpLagPol
+                    type: list_dict
+                    key_element: name
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: mode
+                        attribute: mode
+                        type: string
+                      - name: min_links
+                        attribute: minLinks
+                        type: int
+                      - name: max_links
+                        attribute: maxLinks
+                        type: int
+                      - name: suspend_individual
+                        attribute: ctrl
+                        map_attribute:
+                          - attribute_regex: 'susp-individual'
+                            mapped_value: true
+                        default_value: false
+                      - name: graceful_convergence
+                        attribute: ctrl
+                        map_attribute:
+                          - attribute_regex: 'graceful-conv'
+                            mapped_value: true
+                        default_value: false
+                      - name: fast_select_standby
+                        attribute: ctrl
+                        map_attribute:
+                          - attribute_regex: 'fast-sel-hot-stdby'
+                            mapped_value: true
+                        default_value: false
+                      - name: load_defer
+                        attribute: ctrl
+                        map_attribute:
+                          - attribute_regex: 'load-defer'
+                            mapped_value: true
+                        default_value: false
+                      - name: symmetric_hash
+                        attribute: ctrl
+                        map_attribute:
+                          - attribute_regex: 'symmetric-hash'
+                            mapped_value: true
+                        default_value: false
+                      - name: hash_key
+                        class: l2LoadBalancePol
+                        attribute: hashFields
+                  - name: port_channel_member_policies
+                    class: lacpIfPol
+                    type: list_dict
+                    key_element: name
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: rate
+                        attribute: txRate
+                      - name: priority
+                        attribute: prio
+                  - name: spanning_tree_policies
+                    class: stpIfPol
+                    type: list_dict
+                    key_element: name
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: bpdu_filter
+                        attribute: ctrl
+                        map_attribute:
+                          - attribute_regex: 'bpdu-filter'
+                            mapped_value: true
+                        default_value: false
+                      - name: bpdu_guard
+                        attribute: ctrl
+                        map_attribute:
+                          - attribute_regex: 'bpdu-guard'
+                            mapped_value: true
+                        default_value: false
+                  - name: mcp_policies
+                    class: mcpIfPol
+                    type: list_dict
+                    key_element: name
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: admin_state
+                        attribute: adminSt
+                        map_boolean: true
+                  - name: l2_policies
+                    class: l2IfPol
+                    type: list_dict
+                    key_element: name
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: vlan_scope
+                        attribute: vlanScope
+                      - name: qinq
+                        attribute: qinq
+                  - name: storm_control_policies
+                    class: stormctrlIfPol
+                    type: list_dict
+                    key_element: name
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: description
+                        attribute: descr
+                      - name: alias
+                        attribute: nameAlias
+                      - name: broadcast_burst_pps
+                        type: int
+                        attribute: bcBurstPps
+                      - name: broadcast_pps
+                        type: int
+                        attribute: bcRatePps
+                      - name: broadcast_burst_rate
+                        type: int
+                        attribute: bcBurstRate
+                      - name: broadcast_rate
+                        type: int
+                        attribute: bcRate
+                      - name: multicast_burst_pps
+                        type: int
+                        attribute: mcBurstPps
+                      - name: multicast_pps
+                        type: int
+                        attribute: mcRatePps
+                      - name: multicast_burst_rate
+                        type: int
+                        attribute: mcBurstRate
+                      - name: multicast_rate
+                        type: int
+                        attribute: mcRate
+                      - name: unknown_unicast_burst_pps
+                        type: int
+                        attribute: uucBurstPps
+                      - name: unknown_unicast_pps
+                        type: int
+                        attribute: uucRatePps
+                      - name: unknown_unicast_burst_rate
+                        type: int
+                        attribute: uucBurstRate
+                      - name: unknown_unicast_rate
+                        type: int
+                        attribute: uucRate
+                      - name: action
+                        attribute: stormCtrlAction
+
+              - name: leaf_interface_policy_groups
+                class: infraAccPortGrp
+                type: list_dict
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                  - name: type
+                    attribute: lagT
+                    map_attribute:
+                      - attribute_regex: 'node'
+                        mapped_value: 'vpc'
+                      - attribute_regex: 'link'
+                        mapped_value: 'pc'
+                    default_value: 'access'
+                  - name: link_level_policy
+                    class: infraRsHIfPol
+                    attribute: tnFabricHIfPolName
+                  - name: cdp_policy
+                    class: infraRsCdpIfPol
+                    attribute: tnCdpIfPolName
+                  - name: lldp_policy
+                    class: infraRsLldpIfPol
+                    attribute: tnLldpIfPolName
+                  - name: spanning_tree_policy
+                    class: infraRsStpIfPol
+                    attribute: tnStpIfPolName
+                  - name: mcp_policy
+                    class: infraRsMcpIfPol
+                    attribute: tnMcpIfPolName
+                  - name: l2_policy
+                    class: infraRsL2IfPol
+                    attribute: tnL2IfPolName
+                  - name: storm_control_policy
+                    class: infraRsStormctrlIfPol
+                    attribute: tnStormctrlIfPolName
+                  - name: aaep
+                    class: infraRsAttEntP
+                    attribute: tDn
+                    attribute_match_regex: '(?<=/attentp-).*'
+
+              - name: leaf_interface_policy_groups
+                class: infraAccBndlGrp
+                type: list_dict
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                  - name: type
+                    attribute: lagT
+                    map_attribute:
+                      - attribute_regex: 'node'
+                        mapped_value: 'vpc'
+                      - attribute_regex: 'link'
+                        mapped_value: 'pc'
+                    default_value: 'access'
+                  - name: link_level_policy
+                    class: infraRsHIfPol
+                    attribute: tnFabricHIfPolName
+                  - name: cdp_policy
+                    class: infraRsCdpIfPol
+                    attribute: tnCdpIfPolName
+                  - name: lldp_policy
+                    class: infraRsLldpIfPol
+                    attribute: tnLldpIfPolName
+                  - name: spanning_tree_policy
+                    class: infraRsStpIfPol
+                    attribute: tnStpIfPolName
+                  - name: mcp_policy
+                    class: infraRsMcpIfPol
+                    attribute: tnMcpIfPolName
+                  - name: l2_policy
+                    class: infraRsL2IfPol
+                    attribute: tnL2IfPolName
+                  - name: storm_control_policy
+                    class: infraRsStormctrlIfPol
+                    attribute: tnStormctrlIfPolName
+                  - name: port_channel_policy
+                    class: infraRsLacpPol
+                    attribute: tnLacpLagPolName
+                  - name: port_channel_member_policy
+                    class: infraRsLacpInterfacePol
+                    attribute: tnLacpIfPolName
+                  - name: aaep
+                    class: infraRsAttEntP
+                    attribute: tDn
+                    attribute_match_regex: '(?<=/attentp-).*'
+
+              - name: spine_interface_policy_groups
+                class: infraSpAccPortGrp
+                type: list_dict
+                key_element: name
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                  - name: link_level_policy
+                    class: infraRsHIfPol
+                    attribute: tnFabricHIfPolName
+                  - name: cdp_policy
+                    class: infraRsCdpIfPol
+                    attribute: tnCdpIfPolName
+                  - name: aaep
+                    class: infraRsAttEntP
+                    attribute: tDn
+                    attribute_match_regex: '(?<=/attentp-).*'
+
+              - name: leaf_interface_profiles
+                class: infraAccPortP
+                type: list_dict
+                key_element: name
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                  - name: selectors
+                    class: infraHPortS
+                    type: list_dict
+                    key_element: name
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: fex_id
+                        type: int
+                        class: infraRsAccBaseGrp
+                        attribute: fexId
+                        conditions:
+                          - type: match
+                            match_regex: '/fexbundle-'
+                            match_attribute: tDn
+                      - name: fex_profile
+                        class: infraRsAccBaseGrp
+                        attribute: tDn
+                        attribute_match_regex: '(?<=/fexprof-).*(?=/fexbundle-)'
+                      - name: policy_group
+                        class: infraRsAccBaseGrp
+                        attribute: tDn
+                        attribute_match_regex: '(?:(?<=/accbundle-)|(?<=/accportgrp-)).*'
+                      - name: port_blocks
+                        class: infraPortBlk
+                        type: list_dict
+                        key_element: name
+                        elements:
+                          - name: name
+                            type: string
+                            attribute: name
+                          - name: description
+                            attribute: descr
+                          - name: from_module
+                            type: int
+                            attribute: fromCard
+                          - name: from_port
+                            type: int
+                            attribute: fromPort
+                          - name: to_module
+                            type: int
+                            attribute: toCard
+                            default_element: from_module
+                          - name: to_port
+                            type: int
+                            attribute: toPort
+                            default_element: from_port
+
+              - name: fex_interface_profiles
+                class: infraFexP
+                type: list_dict
+                key_element: name
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                  - name: selectors
+                    class: infraHPortS
+                    type: list_dict
+                    key_element: name
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: policy_group
+                        class: infraRsAccBaseGrp
+                        attribute: tDn
+                        attribute_match_regex: '(?:(?<=/accbundle-)|(?<=/accportgrp-)).*'
+                      - name: port_blocks
+                        class: infraPortBlk
+                        type: list_dict
+                        key_element: name
+                        elements:
+                          - name: name
+                            type: string
+                            attribute: name
+                          - name: description
+                            attribute: descr
+                          - name: from_module
+                            type: int
+                            attribute: fromCard
+                          - name: from_port
+                            type: int
+                            attribute: fromPort
+                          - name: to_module
+                            type: int
+                            attribute: toCard
+                            default_element: from_module
+                          - name: to_port
+                            type: int
+                            attribute: toPort
+                            default_element: from_port
+
+              - name: spine_interface_profiles
+                class: infraSpAccPortP
+                type: list_dict
+                key_element: name
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                  - name: selectors
+                    class: infraSHPortS
+                    type: list_dict
+                    key_element: name
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: policy_group
+                        class: infraRsSpAccGrp
+                        attribute: tDn
+                        attribute_match_regex: '(?<=/spaccportgrp-).*'
+                      - name: port_blocks
+                        class: infraPortBlk
+                        type: list_dict
+                        key_element: name
+                        elements:
+                          - name: name
+                            type: string
+                            attribute: name
+                          - name: description
+                            attribute: descr
+                          - name: from_module
+                            type: int
+                            attribute: fromCard
+                          - name: from_port
+                            type: int
+                            attribute: fromPort
+                          - name: to_module
+                            type: int
+                            attribute: toCard
+                            default_element: from_module
+                          - name: to_port
+                            type: int
+                            attribute: toPort
+                            default_element: from_port

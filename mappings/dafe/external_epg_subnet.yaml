@@ -1,0 +1,74 @@
+---
+mappings:
+  - xls_sheet: external_epg_subnet
+    key_element: external_subnet
+    elements:
+      - name: tenant
+        class: fvTenant
+        attribute: name
+        mandatory: true
+        conditions:
+          - type: is_parent_parent_parent
+          - type: match
+            class: fvTenant
+            match_attribute: name
+            match_regex: '^((?!infra).)*$'
+      - name: l3_out
+        class: l3extOut
+        attribute: name
+        conditions:
+          - type: is_parent_parent
+      - name: external_epg
+        class: l3extInstP
+        attribute: name
+        conditions:
+          - type: is_parent
+      - name: aggregate_shared_routes
+        class: l3extSubnet
+        attribute: aggregate
+        map_attribute:
+          - attribute_regex: 'shared-rtctrl'
+            mapped_value: 'yes'
+        default_value: 'no'
+      - name: external_subnet
+        class: l3extSubnet
+        attribute: ip
+        mandatory: true
+      - name: external_subnet_for_external_epg
+        class: l3extSubnet
+        attribute: scope
+        map_attribute:
+          - attribute_regex: import-security
+            mapped_value: 'yes'
+        default_value: 'no'
+      - name: export_route_control
+        class: l3extSubnet
+        attribute: scope
+        map_attribute:
+          - attribute_regex: export-rtctrl
+            mapped_value: 'yes'
+        default_value: 'no'
+      - name: shared_route_control
+        class: l3extSubnet
+        attribute: scope
+        map_attribute:
+          - attribute_regex: shared-rtctrl
+            mapped_value: 'yes'
+        default_value: 'no'
+      - name: shared_security
+        class: l3extSubnet
+        attribute: scope
+        map_attribute:
+          - attribute_regex: shared-security
+            mapped_value: 'yes'
+        default_value: 'no'
+      - name: route_control_profile_direction
+        class: l3extRsSubnetToProfile
+        attribute: direction
+        conditions:
+          - type: is_child
+      - name: route_control_profile
+        class: l3extRsSubnetToProfile
+        attribute: tnRtctrlProfileName
+        conditions:
+          - type: is_child

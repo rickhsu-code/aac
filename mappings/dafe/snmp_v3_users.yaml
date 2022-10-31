@@ -1,0 +1,27 @@
+---
+mappings:
+  - xls_sheet: snmp_v3_users
+    key_element: v3_user
+    elements:
+      - name: snmp_policy_name
+        class: snmpPol
+        attribute: name
+        mandatory: true
+        conditions:
+          - type: is_parent
+      - name: v3_user
+        class: snmpUserP
+        attribute: name
+        mandatory: true
+      - name: privilege_type
+        class: snmpUserP
+        attribute: privType
+      - name: privilege_key
+        class: snmpUserP
+        attribute: privKey
+      - name: auth_type
+        class: snmpUserP
+        attribute: authType
+      - name: auth_key
+        class: snmpUserP
+        attribute: authKey

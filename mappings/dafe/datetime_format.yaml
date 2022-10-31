@@ -1,0 +1,18 @@
+---
+mappings:
+  - xls_sheet: datetime_format
+    key_element: display
+    elements:
+      - name: display
+        class: datetimeFormat
+        attribute: displayFormat
+        mandatory: true
+        ignore_filter: true
+      - name: offset
+        class: datetimeFormat
+        attribute: showOffset
+        ignore_filter: true
+      - name: timezone_code
+        class: datetimeFormat
+        attribute: tz
+        ignore_filter: true

@@ -1,0 +1,25 @@
+---
+mappings:
+  - xls_sheet: aaep
+    key_element: name
+    elements:
+      - name: name
+        class: infraAttEntityP
+        attribute: name
+        mandatory: true
+        unique: true
+      - name: description
+        class: infraAttEntityP
+        attribute: descr
+      - name: enable_infra_vlan
+        class: infraProvAcc
+        map_class_value: "yes"
+        default_value: "no"
+        conditions:
+          - type: is_child
+      - name: infra_vlan
+        class: infraRsFuncToEpg
+        attribute: encap
+        attribute_match_regex: "(?<=vlan-).*"
+        conditions:
+          - type: is_child_child

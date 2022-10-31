@@ -1,0 +1,41 @@
+---
+mappings:
+  - xls_sheet: sg_cluster_interfaces
+    key_element: vip_name
+    elements:
+      - name: tenant
+        class: fvTenant
+        attribute: name
+        conditions:
+          - type: is_parent_parent
+      - name: device
+        class: vnsLDevVip
+        attribute: name
+        conditions:
+          - type: is_parent
+      - name: devtype
+        class: vnsLIf
+        attribute: encap
+        map_attribute:
+          - attribute_regex: 'vlan'
+            mapped_value: 'PHYSICAL'
+        default_value: 'VIRTUAL'
+      - name: encap_vlan_id
+        class: vnsLIf
+        attribute: encap
+        attribute_match_regex: '(?<=vlan-).*'
+      - name: vip_name
+        class: vnsLIf
+        attribute: name
+      - name: concrete_device
+        class: vnsRsCIfAttN
+        attribute: tDn
+        attribute_match_regex: '(?<=/cDev-).*(?=/cIf-)'
+        conditions:
+          - type: is_child
+      - name: concrete_interface
+        class: vnsRsCIfAttN
+        attribute: tDn
+        attribute_match_regex: '(?<=/cIf-\[).*(?=\])'
+        conditions:
+          - type: is_child

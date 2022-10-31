@@ -1,0 +1,69 @@
+---
+mappings:
+  - xls_sheet: aaep_domain_association
+    key_element: domain_name
+    elements:
+      - name: aaep_name
+        class: infraAttEntityP
+        attribute: name
+        mandatory: true
+        conditions:
+          - type: is_parent
+      - name: domain_name
+        class: infraRsDomP
+        attribute: tDn
+        attribute_match_regex: '(?<=/phys-).*'
+        mandatory: true
+      - name: domain_type
+        value: physical
+
+  - xls_sheet: aaep_domain_association
+    key_element: domain_name
+    elements:
+      - name: aaep_name
+        class: infraAttEntityP
+        attribute: name
+        mandatory: true
+        conditions:
+          - type: is_parent
+      - name: domain_name
+        class: infraRsDomP
+        attribute: tDn
+        attribute_match_regex: '(?<=/l3dom-).*'
+        mandatory: true
+      - name: domain_type
+        value: external_l3
+
+  - xls_sheet: aaep_domain_association
+    key_element: domain_name
+    elements:
+      - name: aaep_name
+        class: infraAttEntityP
+        attribute: name
+        mandatory: true
+        conditions:
+          - type: is_parent
+      - name: domain_name
+        class: infraRsDomP
+        attribute: tDn
+        attribute_match_regex: '(?<=vmmp-VMware/dom-).*'
+        mandatory: true
+      - name: domain_type
+        value: vmm_vmware
+
+  - xls_sheet: aaep_domain_association
+    key_element: domain_name
+    elements:
+      - name: aaep_name
+        class: infraAttEntityP
+        attribute: name
+        mandatory: true
+        conditions:
+          - type: is_parent
+      - name: domain_name
+        class: infraRsDomP
+        attribute: tDn
+        attribute_match_regex: '(?<=/l2dom-).*'
+        mandatory: true
+      - name: domain_type
+        value: external_l2

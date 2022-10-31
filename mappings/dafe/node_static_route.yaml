@@ -1,0 +1,53 @@
+---
+mappings:
+  - xls_sheet: node_static_route
+    key_element: prefix
+    elements:
+      - name: tenant
+        class: fvTenant
+        attribute: name
+        conditions:
+          - type: is_parent_parent_parent_parent
+      - name: l3out
+        class: l3extOut
+        attribute: name
+        conditions:
+          - type: is_parent_parent_parent
+      - name: l3out_node_profile
+        class: l3extLNodeP
+        attribute: name
+        conditions:
+          - type: is_parent_parent
+      - name: pod_id
+        class: l3extRsNodeL3OutAtt
+        attribute: tDn
+        attribute_match_regex: '(?<=/pod-)\d+'
+        conditions:
+          - type: is_parent
+      - name: node_id
+        class: l3extRsNodeL3OutAtt
+        attribute: tDn
+        attribute_match_regex: '(?<=/node-)\d+'
+        mandatory: true
+        conditions:
+          - type: is_parent
+      - name: prefix
+        class: ipRouteP
+        attribute: ip
+        mandatory: true
+      - name: admin_distance
+        class: ipRouteP
+        attribute: pref
+      - name: route_control
+        class: ipRouteP
+        attribute: rtCtrl
+      - name: next_hop_address
+        class: ipNexthopP
+        attribute: nhAddr
+        conditions:
+          - type: is_child
+      - name: next_hop_preference
+        class: ipNexthopP
+        attribute: pref
+        conditions:
+          - type: is_child

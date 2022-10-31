@@ -1,0 +1,48 @@
+---
+mappings:
+  - xls_sheet: pod_policy_group
+    key_element: name
+    elements:
+      - name: name
+        class: fabricPodPGrp
+        attribute: name
+        mandatory: true
+        unique: true
+      - name: description
+        class: fabricPodPGrp
+        attribute: descr
+      - name: snmp_pol
+        class: fabricRsSnmpPol
+        attribute: tnSnmpPolName
+        conditions:
+          - type: is_child
+      - name: isis_pol
+        class: fabricRsPodPGrpIsisDomP
+        attribute: tnIsisDomPolName
+        conditions:
+          - type: is_child
+      - name: coop_pol
+        class: fabricRsPodPGrpCoopP
+        attribute: tnCoopPolName
+        conditions:
+          - type: is_child
+      - name: bgp_pol
+        class: fabricRsPodPGrpBGPRRP
+        attribute: tnBgpInstPolName
+        conditions:
+          - type: is_child
+      - name: date_time_pol
+        class: fabricRsTimePol
+        attribute: tnDatetimePolName
+        conditions:
+          - type: is_child
+      - name: macsec_pol
+        class: fabricRsMacsecPol
+        attribute: tnMacsecFabIfPolName
+        conditions:
+          - type: is_child
+      - name: com_pol
+        class: fabricRsCommPol
+        attribute: tnCommPolName
+        conditions:
+          - type: is_child

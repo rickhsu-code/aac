@@ -1,0 +1,22 @@
+---
+mappings:
+  - xls_sheet: bgp_rr
+    key_element: bgp_rr_node_id
+    elements:
+      - name: bgp_rr_node_id
+        class: bgpRRNodePEp
+        attribute: id
+        mandatory: true
+        unique: true
+      - name: pod_id
+        class: bgpRRNodePEp
+        attribute: podId
+      - name: fabric_bgp_as
+        class: bgpAsP
+        attribute: asn
+        ignore_filter: true
+        conditions:
+          - type: match_parent
+            class: bgpInstPol
+            match_attribute: name
+            match_regex: default

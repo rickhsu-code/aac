@@ -1,0 +1,52 @@
+---
+mappings:
+  - xls_sheet: end_point_group
+    key_element: name
+    elements:
+      - name: tenant
+        class: fvTenant
+        attribute: name
+        conditions:
+          - type: is_parent_parent
+      - name: app_profile
+        class: fvAp
+        attribute: name
+        conditions:
+          - type: is_parent
+      - name: qos_class
+        class: fvAEPg
+        attribute: prio
+      - name: name
+        class: fvAEPg
+        attribute: name
+        mandatory: true
+      - name: name_alias
+        class: fvAEPg
+        attribute: nameAlias
+      - name: description
+        class: fvAEPg
+        attribute: descr
+      - name: floodOnEncap
+        class: fvAEPg
+        attribute: floodOnEncap
+      - name: prefGrMemb
+        class: fvAEPg
+        attribute: prefGrMemb
+      - name: intra_epg_isolation
+        class: fvAEPg
+        attribute: pcEnfPref
+      - name: bridge_domain
+        class: fvRsBd
+        attribute: tnFvBDName
+        conditions:
+          - type: is_child
+      - name: dataPlanePolicer
+        class: fvRsDppPol
+        attribute: tnQosDppPolName
+        conditions:
+          - type: is_child
+      - name: custom_qos_pol
+        class: fvRsCustQosPol
+        attribute: tnQosCustomPolName
+        conditions:
+          - type: is_child

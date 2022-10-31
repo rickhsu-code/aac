@@ -1,0 +1,15 @@
+---
+mappings:
+  - xls_sheet: port_tracking
+    key_element: admin_state
+    elements:
+      - name: admin_state
+        class: infraPortTrackPol
+        attribute: adminSt
+        mandatory: true
+      - name: delay_restore_timer
+        class: infraPortTrackPol
+        attribute: delay
+      - name: min_links_trigger_port_tracking
+        class: infraPortTrackPol
+        attribute: minLinks

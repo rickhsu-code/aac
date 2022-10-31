@@ -1,0 +1,18 @@
+---
+mappings:
+  - xls_sheet: snmp_community
+    key_element: community_name
+    elements:
+      - name: snmp_policy_name
+        class: snmpPol
+        attribute: name
+        mandatory: true
+        conditions:
+          - type: is_parent
+      - name: community_name
+        class: snmpCommunityP
+        attribute: name
+        mandatory: true
+      - name: community_description
+        class: snmpCommunityP
+        attribute: descr

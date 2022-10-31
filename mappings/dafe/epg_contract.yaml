@@ -1,0 +1,63 @@
+---
+mappings:
+  - xls_sheet: epg_contract
+    key_element: contract
+    elements:
+      - name: tenant
+        class: fvTenant
+        attribute: name
+        conditions:
+          - type: is_parent_parent_parent
+      - name: app_profile
+        class: fvAp
+        attribute: name
+        conditions:
+          - type: is_parent_parent
+      - name: name
+        class: fvAEPg
+        attribute: name
+        mandatory: true
+        conditions:
+          - type: is_parent
+      - name: contract_qos_class
+        class: fvRsCons
+        attribute: prio
+      - name: contract
+        class: fvRsCons
+        attribute: tnVzBrCPName
+        mandatory: true
+      - name: consumed_ctr
+        value: 'yes'
+      - name: provided_ctr
+        value: 'no'
+
+  - xls_sheet: epg_contract
+    key_element: contract
+    elements:
+      - name: tenant
+        class: fvTenant
+        attribute: name
+        conditions:
+          - type: is_parent_parent_parent
+      - name: app_profile
+        class: fvAp
+        attribute: name
+        conditions:
+          - type: is_parent_parent
+      - name: name
+        class: fvAEPg
+        attribute: name
+        mandatory: true
+        conditions:
+          - type: is_parent
+      - name: contract_qos_class
+        class: fvRsProv
+        attribute: prio
+      - name: contract
+        class: fvRsProv
+        attribute: tnVzBrCPName
+        mandatory: true
+      - name: consumed_ctr
+        value: 'no'
+      - name: provided_ctr
+        value: 'yes'

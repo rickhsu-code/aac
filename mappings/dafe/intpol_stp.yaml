@@ -1,0 +1,16 @@
+---
+mappings:
+  - xls_sheet: intpol_stp
+    key_element: name
+    elements:
+      - name: name
+        class: stpIfPol
+        attribute: name
+        mandatory: true
+        unique: true
+      - name: description
+        class: stpIfPol
+        attribute: descr
+      - name: stp_control
+        class: stpIfPol
+        attribute: ctrl

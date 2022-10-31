@@ -1,0 +1,27 @@
+---
+mappings:
+  - xls_sheet: vrf_bgp_route_target
+    key_element: routeTarget
+    elements:
+      - name: tenant
+        class: fvTenant
+        attribute: name
+        conditions:
+          - type: is_parent_parent_parent
+      - name: vrfName
+        class: fvCtx
+        attribute: name
+        conditions:
+          - type: is_parent_parent
+      - name: addressFamily
+        class: bgpRtTargetP
+        attribute: af
+        conditions:
+          - type: is_parent
+      - name: routeTarget
+        class: bgpRtTarget
+        attribute: rt
+        mandatory: true
+      - name: routeTargetType
+        class: bgpRtTarget
+        attribute: type

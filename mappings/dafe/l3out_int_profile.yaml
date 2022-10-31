@@ -1,0 +1,279 @@
+---
+mappings:
+  - xls_sheet: l3out_int_profile
+    key_element: left_node_id
+    elements:
+      - name: tenant
+        class: fvTenant
+        attribute: name
+        conditions:
+          - type: is_parent_parent_parent_parent
+      - name: l3out
+        class: l3extOut
+        attribute: name
+        conditions:
+          - type: is_parent_parent_parent
+      - name: l3out_node_profile
+        class: l3extLNodeP
+        attribute: name
+        conditions:
+          - type: is_parent_parent
+      - name: name
+        class: l3extLIfP
+        attribute: name
+        conditions:
+          - type: is_parent
+      - name: use_bfd
+        class: bfdIfP
+        map_class_value: 'yes'
+        default_value: 'no'
+        conditions:
+          - type: is_neighbor
+      - name: ospf_interface_policy
+        class: ospfRsIfPol
+        attribute: tnOspfIfPolName
+        conditions:
+          - type: is_neighbor_child
+      - name: path_type
+        class: l3extRsPathL3OutAtt
+        attribute: tDn
+        map_attribute:
+          - attribute_regex: '/pathep-\[(?!eth)'
+            mapped_value: vPC
+        default_value: ''
+        mandatory: true
+      - name: vlan_encap_id
+        class: l3extRsPathL3OutAtt
+        attribute: encap
+        attribute_match_regex: '(?<=vlan-).*'
+      - name: autostate
+        class: l3extRsPathL3OutAtt
+        attribute: autostate
+      - name: trunk_mode
+        class: l3extRsPathL3OutAtt
+        attribute: mode
+      - name: mtu
+        class: l3extRsPathL3OutAtt
+        attribute: mtu
+      - name: pod_id
+        class: l3extRsPathL3OutAtt
+        attribute: tDn
+        attribute_match_regex: '(?<=/pod-)\d+'
+      - name: left_node_id
+        class: l3extRsPathL3OutAtt
+        attribute: tDn
+        attribute_match_regex: '(?<=/protpaths-)\d+'
+      - name: right_node_id
+        class: l3extRsPathL3OutAtt
+        attribute: tDn
+        attribute_match_regex: '(?<=-)\d+(?=/pathep-)'
+        mandatory: true
+      - name: int_pol_group
+        class: l3extRsPathL3OutAtt
+        attribute: tDn
+        attribute_match_regex: '(?<=/pathep-).+'
+      - name: ip_addr_side_a
+        class: l3extMember
+        attribute: addr
+        mandatory: true
+        conditions:
+          - type: is_child
+          - type: match
+            match_attribute: side
+            match_regex: 'A'
+      - name: ip_addr_side_b
+        class: l3extMember
+        attribute: addr
+        mandatory: true
+        conditions:
+          - type: is_child
+          - type: match
+            match_attribute: side
+            match_regex: 'B'
+      - name: secondary_ip
+        class: l3extIp
+        attribute: addr
+        conditions:
+          - type: is_child_child
+          - type: match_parent
+            class: l3extMember
+            match_attribute: side
+            match_regex: 'A'
+
+  - xls_sheet: l3out_int_profile
+    key_element: left_node_id
+    elements:
+      - name: tenant
+        class: fvTenant
+        attribute: name
+        conditions:
+          - type: is_parent_parent_parent_parent
+      - name: l3out
+        class: l3extOut
+        attribute: name
+        conditions:
+          - type: is_parent_parent_parent
+      - name: l3out_node_profile
+        class: l3extLNodeP
+        attribute: name
+        conditions:
+          - type: is_parent_parent
+      - name: name
+        class: l3extLIfP
+        attribute: name
+        conditions:
+          - type: is_parent
+      - name: use_bfd
+        class: bfdIfP
+        map_class_value: 'yes'
+        default_value: 'no'
+        conditions:
+          - type: is_neighbor
+      - name: ospf_interface_policy
+        class: ospfRsIfPol
+        attribute: tnOspfIfPolName
+        conditions:
+          - type: is_neighbor_child
+      - name: interface_type
+        class: l3extRsPathL3OutAtt
+        attribute: ifInstT
+        map_attribute:
+          - attribute_regex: 'ext-svi'
+            mapped_value: svi
+          - attribute_regex: 'sub-interface'
+            mapped_value: routed_sub
+        default_value: 'routed'
+      - name: path_type
+        class: l3extRsPathL3OutAtt
+        attribute: tDn
+        map_attribute:
+          - attribute_regex: '/pathep-\[(?!eth)'
+            mapped_value: PC
+        default_value: ''
+        mandatory: true
+      - name: ip_addr_side_a
+        class: l3extRsPathL3OutAtt
+        attribute: addr
+        mandatory: true
+        map_attribute:
+          - attribute_regex: '0.0.0.0'
+            mapped_value: ''
+      - name: secondary_ip
+        class: l3extIp
+        attribute: addr
+        conditions:
+          - type: is_child
+      - name: vlan_encap_id
+        class: l3extRsPathL3OutAtt
+        attribute: encap
+        attribute_match_regex: '(?<=vlan-).*'
+      - name: autostate
+        class: l3extRsPathL3OutAtt
+        attribute: autostate
+      - name: trunk_mode
+        class: l3extRsPathL3OutAtt
+        attribute: mode
+      - name: mtu
+        class: l3extRsPathL3OutAtt
+        attribute: mtu
+      - name: pod_id
+        class: l3extRsPathL3OutAtt
+        attribute: tDn
+        attribute_match_regex: '(?<=/pod-)\d+'
+      - name: left_node_id
+        class: l3extRsPathL3OutAtt
+        attribute: tDn
+        attribute_match_regex: '(?<=/paths-)\d+'
+      - name: int_pol_group
+        class: l3extRsPathL3OutAtt
+        attribute: tDn
+        attribute_match_regex: '(?<=/pathep-).+'
+
+  - xls_sheet: l3out_int_profile
+    key_element: left_node_id
+    elements:
+      - name: tenant
+        class: fvTenant
+        attribute: name
+        conditions:
+          - type: is_parent_parent_parent_parent
+      - name: l3out
+        class: l3extOut
+        attribute: name
+        conditions:
+          - type: is_parent_parent_parent
+      - name: l3out_node_profile
+        class: l3extLNodeP
+        attribute: name
+        conditions:
+          - type: is_parent_parent
+      - name: name
+        class: l3extLIfP
+        attribute: name
+        conditions:
+          - type: is_parent
+      - name: use_bfd
+        class: bfdIfP
+        map_class_value: 'yes'
+        default_value: 'no'
+        conditions:
+          - type: is_neighbor
+      - name: ospf_interface_policy
+        class: ospfRsIfPol
+        attribute: tnOspfIfPolName
+        conditions:
+          - type: is_neighbor_child
+      - name: interface_type
+        class: l3extRsPathL3OutAtt
+        attribute: ifInstT
+        map_attribute:
+          - attribute_regex: 'ext-svi'
+            mapped_value: svi
+          - attribute_regex: 'sub-interface'
+            mapped_value: routed_sub
+        default_value: 'routed'
+      - name: path_type
+        class: l3extRsPathL3OutAtt
+        attribute: tDn
+        map_attribute:
+          - attribute_regex: '/pathep-\[eth'
+            mapped_value: Access
+        default_value: ''
+        mandatory: true
+      - name: ip_addr_side_a
+        class: l3extRsPathL3OutAtt
+        attribute: addr
+        mandatory: true
+        map_attribute:
+          - attribute_regex: '0.0.0.0'
+            mapped_value: ''
+      - name: secondary_ip
+        class: l3extIp
+        attribute: addr
+        conditions:
+          - type: is_child
+      - name: vlan_encap_id
+        class: l3extRsPathL3OutAtt
+        attribute: encap
+        attribute_match_regex: '(?<=vlan-).*'
+      - name: autostate
+        class: l3extRsPathL3OutAtt
+        attribute: autostate
+      - name: trunk_mode
+        class: l3extRsPathL3OutAtt
+        attribute: mode
+      - name: mtu
+        class: l3extRsPathL3OutAtt
+        attribute: mtu
+      - name: pod_id
+        class: l3extRsPathL3OutAtt
+        attribute: tDn
+        attribute_match_regex: '(?<=/pod-)\d+'
+      - name: left_node_id
+        class: l3extRsPathL3OutAtt
+        attribute: tDn
+        attribute_match_regex: '(?<=/paths-)\d+'
+      - name: port_id
+        class: l3extRsPathL3OutAtt
+        attribute: tDn
+        attribute_match_regex: '(?<=pathep-\[eth).*(?=\])'

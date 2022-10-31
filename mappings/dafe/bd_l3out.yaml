@@ -1,0 +1,20 @@
+---
+mappings:
+  - xls_sheet: bd_l3out
+    key_element: l3out_name
+    elements:
+      - name: tenant
+        class: fvTenant
+        attribute: name
+        conditions:
+          - type: is_parent_parent
+      - name: bd_name
+        class: fvBD
+        attribute: name
+        mandatory: true
+        conditions:
+          - type: is_parent
+      - name: l3out_name
+        class: fvRsBDToOut
+        attribute: tnL3extOutName
+        mandatory: true

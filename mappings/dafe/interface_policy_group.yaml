@@ -1,0 +1,148 @@
+---
+mappings:
+  - xls_sheet: interface_policy_group
+    key_element: name
+    elements:
+      - name: name
+        class: infraAccBndlGrp
+        attribute: name
+        mandatory: true
+        unique: true
+      - name: interface_policy_group_type
+        class: infraAccBndlGrp
+        attribute: lagT
+        attribute_match_regex: 'node|link'
+        mandatory: true
+        map_attribute:
+          - attribute_regex: node
+            mapped_value: vPC
+          - attribute_regex: link
+            mapped_value: PC
+      - name: description
+        class: infraAccBndlGrp
+        attribute: descr
+      - name: switch_type
+        value: leaf
+      - name: lldp_pol
+        class: infraRsLldpIfPol
+        attribute: tnLldpIfPolName
+        conditions:
+          - type: is_child
+      - name: stp_pol
+        class: infraRsStpIfPol
+        attribute: tnStpIfPolName
+        conditions:
+          - type: is_child
+      - name: l2_int_pol
+        class: infraRsL2IfPol
+        attribute: tnL2IfPolName
+        conditions:
+          - type: is_child
+      - name: cdp_pol
+        class: infraRsCdpIfPol
+        attribute: tnCdpIfPolName
+        conditions:
+          - type: is_child
+      - name: mcp_pol
+        class: infraRsMcpIfPol
+        attribute: tnMcpIfPolName
+        conditions:
+          - type: is_child
+      - name: aaep
+        class: infraRsAttEntP
+        attribute: tDn
+        attribute_match_regex: '(?<=/attentp-).*'
+        conditions:
+          - type: is_child
+      - name: link_pol
+        class: infraRsHIfPol
+        attribute: tnFabricHIfPolName
+        conditions:
+          - type: is_child
+      - name: lacp_pol
+        class: infraRsLacpPol
+        attribute: tnLacpLagPolName
+        conditions:
+          - type: is_child
+
+  - xls_sheet: interface_policy_group
+    key_element: name
+    elements:
+      - name: name
+        class: infraAccPortGrp
+        attribute: name
+        mandatory: true
+        unique: true
+      - name: interface_policy_group_type
+        value: Access
+      - name: description
+        class: infraAccPortGrp
+        attribute: descr
+      - name: switch_type
+        value: leaf
+      - name: lldp_pol
+        class: infraRsLldpIfPol
+        attribute: tnLldpIfPolName
+        conditions:
+          - type: is_child
+      - name: stp_pol
+        class: infraRsStpIfPol
+        attribute: tnStpIfPolName
+        conditions:
+          - type: is_child
+      - name: l2_int_pol
+        class: infraRsL2IfPol
+        attribute: tnL2IfPolName
+        conditions:
+          - type: is_child
+      - name: cdp_pol
+        class: infraRsCdpIfPol
+        attribute: tnCdpIfPolName
+        conditions:
+          - type: is_child
+      - name: mcp_pol
+        class: infraRsMcpIfPol
+        attribute: tnMcpIfPolName
+        conditions:
+          - type: is_child
+      - name: aaep
+        class: infraRsAttEntP
+        attribute: tDn
+        attribute_match_regex: '(?<=/attentp-).*'
+        conditions:
+          - type: is_child
+      - name: link_pol
+        class: infraRsHIfPol
+        attribute: tnFabricHIfPolName
+        conditions:
+          - type: is_child
+
+  - xls_sheet: interface_policy_group
+    key_element: name
+    elements:
+      - name: name
+        class: infraSpAccPortGrp
+        attribute: name
+        mandatory: true
+        unique: true
+      - name: description
+        class: infraSpAccPortGrp
+        attribute: descr
+      - name: switch_type
+        value: spine
+      - name: cdp_pol
+        class: infraRsCdpIfPol
+        attribute: tnCdpIfPolName
+        conditions:
+          - type: is_child
+      - name: aaep
+        class: infraRsAttEntP
+        attribute: tDn
+        attribute_match_regex: '(?<=/attentp-).*'
+        conditions:
+          - type: is_child
+      - name: link_pol
+        class: infraRsHIfPol
+        attribute: tnFabricHIfPolName
+        conditions:
+          - type: is_child

@@ -1,0 +1,183 @@
+---
+mappings:
+  - xls_sheet: interface_selector
+    key_element: name
+    elements:
+      - name: interface_profile
+        class: infraAccPortP
+        attribute: name
+        mandatory: true
+        conditions:
+          - type: is_parent
+      - name: name
+        class: infraHPortS
+        attribute: name
+        mandatory: true
+      - name: description
+        class: infraHPortS
+        attribute: descr
+      - name: interface_policy_group
+        class: infraRsAccBaseGrp
+        attribute: tDn
+        attribute_match_regex: "(?<=/accportgrp-).*|(?<=/accbundle-).*"
+        conditions:
+          - type: is_child
+      - name: interface_polgroup_type
+        class: infraRsAccBaseGrp
+        attribute: tDn
+        map_attribute:
+          - attribute_regex: "(?<=/accportgrp-).*"
+            mapped_value: Access
+          - attribute_regex: "(?<=/accbundle-).*"
+            mapped_value: PC
+        default_value: ""
+        conditions:
+          - type: is_child
+      - name: interface_profile_type
+        value: leaf
+      - name: description
+        class: infraHPortS
+        attribute: descr
+      - name: port_block_description
+        class: infraPortBlk
+        attribute: descr
+        conditions:
+          - type: is_child
+      - name: from_port
+        class: infraPortBlk
+        attribute: fromPort
+        conditions:
+          - type: is_child
+      - name: from_slot
+        class: infraPortBlk
+        attribute: fromCard
+        conditions:
+          - type: is_child
+      - name: to_port
+        class: infraPortBlk
+        attribute: toPort
+        conditions:
+          - type: is_child
+      - name: to_slot
+        class: infraPortBlk
+        attribute: toCard
+        conditions:
+          - type: is_child
+
+  - xls_sheet: interface_selector
+    key_element: name
+    elements:
+      - name: interface_profile
+        class: infraFexP
+        attribute: name
+        mandatory: true
+        conditions:
+          - type: is_parent
+      - name: name
+        class: infraHPortS
+        attribute: name
+        mandatory: true
+      - name: description
+        class: infraHPortS
+        attribute: desc
+      - name: interface_policy_group
+        class: infraRsAccBaseGrp
+        attribute: tDn
+        attribute_match_regex: "(?<=/accportgrp-).*|(?<=/accbundle-).*"
+        conditions:
+          - type: is_child
+      - name: interface_polgroup_type
+        class: infraHPortS
+        attribute: tDn
+        map_attribute:
+          - attribute_regex: "(?<=/accportgrp-).*"
+            mapped_value: Access
+          - attribute_regex: "(?<=/accbundle-).*"
+            mapped_value: PC
+        default_value: ""
+        conditions:
+          - type: is_child
+      - name: interface_profile_type
+        value: fex
+      - name: description
+        class: infraHPortS
+        attribute: descr
+      - name: port_block_description
+        class: infraPortBlk
+        attribute: descr
+        conditions:
+          - type: is_child
+      - name: from_port
+        class: infraPortBlk
+        attribute: fromPort
+        conditions:
+          - type: is_child
+      - name: from_slot
+        class: infraPortBlk
+        attribute: fromCard
+        conditions:
+          - type: is_child
+      - name: to_port
+        class: infraPortBlk
+        attribute: toPort
+        conditions:
+          - type: is_child
+      - name: to_slot
+        class: infraPortBlk
+        attribute: toCard
+        conditions:
+          - type: is_child
+
+  - xls_sheet: interface_selector
+    key_element: name
+    elements:
+      - name: interface_profile
+        class: infraSpAccPortP
+        attribute: name
+        conditions:
+          - type: is_parent
+      - name: name
+        class: infraSHPortS
+        attribute: name
+        mandatory: true
+      - name: description
+        class: infraSHPortS
+        attribute: desc
+      - name: interface_policy_group
+        class: infraRsSpAccGrp
+        attribute: tDn
+        attribute_match_regex: "(?<=/spaccportgrp-).*"
+        conditions:
+          - type: is_child
+      - name: interface_polgroup_type
+        value: Access
+      - name: interface_profile_type
+        value: spine
+      - name: description
+        class: infraHPortS
+        attribute: descr
+      - name: port_block_description
+        class: infraPortBlk
+        attribute: descr
+        conditions:
+          - type: is_child
+      - name: from_port
+        class: infraPortBlk
+        attribute: fromPort
+        conditions:
+          - type: is_child
+      - name: from_slot
+        class: infraPortBlk
+        attribute: fromCard
+        conditions:
+          - type: is_child
+      - name: to_port
+        class: infraPortBlk
+        attribute: toPort
+        conditions:
+          - type: is_child
+      - name: to_slot
+        class: infraPortBlk
+        attribute: toCard
+        conditions:
+          - type: is_child

@@ -1,0 +1,22 @@
+---
+mappings:
+  - xls_sheet: intpol_l2
+    key_element: name
+    elements:
+      - name: name
+        class: l2IfPol
+        attribute: name
+        mandatory: true
+        unique: true
+      - name: description
+        class: l2IfPol
+        attribute: descr
+      - name: qinq
+        class: l2IfPol
+        attribute: qinq
+      - name: reflective_relay
+        class: l2IfPol
+        attribute: vepa
+      - name: vlan_scope
+        class: l2IfPol
+        attribute: vlanScope

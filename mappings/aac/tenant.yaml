@@ -1,0 +1,1683 @@
+---
+files:
+  - name: tenants.yaml
+    elements:
+      - name: apic
+        type: dict
+        elements:
+          - name: tenants
+            type: list_dict
+            class: fvTenant
+            key_element: name
+            ignore_filter: true
+            comment: "\n"
+            elements:
+              - name: name
+                type: string
+                attribute: name
+                ignore_filter: true
+              - name: alias
+                attribute: nameAlias
+              - name: description
+                attribute: descr
+              - name: vrfs
+                type: list_dict
+                key_element: name
+                class: fvCtx
+                conditions:
+                  - type: no_match
+                    match_regex: '^copy$'
+                    match_attribute: name
+                  - type: no_match
+                    match_regex: '^inb$'
+                    match_attribute: name
+                  - type: no_match
+                    match_regex: '^oob$'
+                    match_attribute: name
+                  - type: no_match
+                    match_regex: '^ave-ctrl$'
+                    match_attribute: name
+                  - type: no_match
+                    match_regex: '^overlay-1$'
+                    match_attribute: name
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                  - name: alias
+                    attribute: nameAlias
+                  - name: description
+                    attribute: descr
+                  - name: data_plane_learning
+                    attribute: ipDataPlaneLearning
+                    map_boolean: true
+                  - name: enforcement_direction
+                    attribute: pcEnfDir
+                  - name: enforcement_preference
+                    attribute: pcEnfPref
+                  - name: bgp
+                    type: dict
+                    elements:
+                      - name: timer_policy
+                        class: fvRsBgpCtxPol
+                        attribute: tnBgpCtxPolName
+                  - name: dns_labels
+                    type: list
+                    class: dnsLbl
+                    attribute: name
+                  - name: contracts
+                    type: dict
+                    elements:
+                      - name: consumers
+                        type: list
+                        class: vzRsAnyToCons
+                        attribute: tnVzBrCPName
+                      - name: providers
+                        type: list
+                        class: vzRsAnyToProv
+                        attribute: tnVzBrCPName
+                      - name: imported_consumers
+                        type: list
+                        class: vzRsAnyToConsIf
+                        attribute: tnVzCPIfName
+
+              - name: bridge_domains
+                type: list_dict
+                key_element: name
+                class: fvBD
+                conditions:
+                  - type: no_match
+                    match_regex: '^inb$'
+                    match_attribute: name
+                  - type: no_match
+                    match_regex: '^ave-ctrl$'
+                    match_attribute: name
+                  - type: no_match
+                    match_regex: '^overlay-1$'
+                    match_attribute: name
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                  - name: alias
+                    attribute: nameAlias
+                  - name: description
+                    attribute: descr
+                  - name: mac
+                    attribute: mac
+                  - name: arp_flooding
+                    attribute: arpFlood
+                    map_boolean: true
+                  - name: ip_dataplane_learning
+                    attribute: ipLearning
+                    map_boolean: true
+                  - name: limit_ip_learn_to_subnets
+                    attribute: limitIpLearnToSubnets
+                    map_boolean: true
+                  - name: multi_destination_flooding
+                    attribute: multiDstPktAct
+                  - name: unknown_unicast
+                    attribute: unkMacUcastAct
+                  - name: unknown_ipv4_multicast
+                    attribute: unkMcastAct
+                  - name: unknown_ipv6_multicast
+                    attribute: v6unkMcastAct
+                  - name: unicast_routing
+                    attribute: unicastRoute
+                    map_boolean: true
+                  - name: advertise_host_routes
+                    attribute: hostBasedRouting
+                    map_boolean: true
+                  - name: l3_multicast
+                    attribute: mcastAllow
+                    map_boolean: true
+                  - name: vrf
+                    class: fvRsCtx
+                    attribute: tnFvCtxName
+                  - name: subnets
+                    type: list_dict
+                    key_element: ip
+                    class: fvSubnet
+                    elements:
+                      - name: ip
+                        attribute: ip
+                      - name: description
+                        attribute: descr
+                      - name: primary_ip
+                        attribute: preferred
+                        map_boolean: true
+                      - name: public
+                        attribute: scope
+                        map_attribute:
+                          - attribute_regex: public
+                            mapped_value: true
+                        default_value: false
+                      - name: private
+                        attribute: scope
+                        map_attribute:
+                          - attribute_regex: private
+                            mapped_value: true
+                        default_value: false
+                      - name: shared
+                        attribute: scope
+                        map_attribute:
+                          - attribute_regex: shared
+                            mapped_value: true
+                        default_value: false
+                      - name: igmp_querier
+                        attribute: ctrl
+                        map_attribute:
+                          - attribute_regex: querier
+                            mapped_value: true
+                        default_value: false
+                      - name: nd_ra_prefix
+                        attribute: ctrl
+                        map_attribute:
+                          - attribute_regex: nd
+                            mapped_value: true
+                        default_value: false
+                      - name: no_default_gateway
+                        attribute: ctrl
+                        map_attribute:
+                          - attribute_regex: no-default-gateway
+                            mapped_value: true
+                        default_value: false
+                  - name: l3outs
+                    type: list
+                    class: fvRsBDToOut
+                    attribute: tnL3extOutName
+                  - name: dhcp_labels
+                    type: list_dict
+                    class: dhcpLbl
+                    elements:
+                      - name: dhcp_relay_policy
+                        attribute: name
+                      - name: dhcp_option_policy
+                        class: dhcpRsDhcpOptionPol
+                        attribute: tnDhcpOptionPolName
+
+              - name: application_profiles
+                type: list_dict
+                ignore_filter: true
+                key_element: name
+                class: fvAp
+                conditions:
+                  - type: no_match
+                    match_regex: '^access$'
+                    match_attribute: name
+                  - type: no_match
+                    match_regex: '^ave-ctrl$'
+                    match_attribute: name
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                    ignore_filter: true
+                  - name: alias
+                    attribute: nameAlias
+                  - name: description
+                    attribute: descr
+                  - name: endpoint_groups
+                    type: list_dict
+                    key_element: name
+                    class: fvAEPg
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: alias
+                        attribute: nameAlias
+                      - name: description
+                        attribute: descr
+                      - name: flood_in_encap
+                        attribute: floodOnEncap
+                        map_boolean: true
+                      - name: intra_epg_isolation
+                        attribute: pcEnfPref
+                        map_boolean: true
+                      - name: preferred_group
+                        attribute: prefGrMemb
+                        map_boolean: true
+                      - name: bridge_domain
+                        class: fvRsBd
+                        attribute: tnFvBDName
+                      - name: physical_domains
+                        type: list
+                        class: fvRsDomAtt
+                        attribute: tDn
+                        attribute_match_regex: '(?<=/phys-).*'
+                      - name: vmware_vmm_domains
+                        type: list_dict
+                        key_element: name
+                        class: fvRsDomAtt
+                        conditions:
+                          - type: match
+                            match_regex: '(?<=/vmmp-VMware/dom-).*'
+                            match_attribute: tDn
+                        elements:
+                          - name: name
+                            type: string
+                            attribute: tDn
+                            attribute_match_regex: '(?<=/vmmp-VMware/dom-).*'
+                          - name: u_segmentation
+                            attribute: classPref
+                            map_attribute:
+                              - attribute_regex: useg
+                                mapped_value: true
+                            default_value: false
+                          - name: delimiter
+                            attribute: delimiter
+                          - name: vlan
+                            type: int
+                            attribute: encap
+                            attribute_match_regex: '(?<=vlan-).*'
+                            conditions:
+                              - type: match
+                                match_attribute: primaryEncap
+                                match_regex: '^$'
+                          - name: primary_vlan
+                            type: int
+                            attribute: primaryEncap
+                            attribute_match_regex: '(?<=vlan-).*'
+                          - name: secondary_vlan
+                            type: int
+                            attribute: encap
+                            attribute_match_regex: '(?<=vlan-).*'
+                            conditions:
+                              - type: match
+                                match_attribute: primaryEncap
+                                match_regex: '(?<=vlan-).*'
+                          - name: netflow
+                            attribute: netflowPref
+                            map_boolean: true
+                          - name: deployment_immediacy
+                            attribute: instrImedcy
+                          - name: resolution_immediacy
+                            attribute: resImedcy
+                          - name: allow_promiscuous
+                            class: vmmSecP
+                            attribute: allowPromiscuous
+                          - name: forged_transmits
+                            class: vmmSecP
+                            attribute: forgedTransmits
+                          - name: mac_changes
+                            class: vmmSecP
+                            attribute: macChanges
+                      - name: static_ports
+                        type: list_dict
+                        class: fvRsPathAtt
+                        elements:
+                          - name: node_id
+                            type: int
+                            attribute: tDn
+                            attribute_match_regex: '(?<=paths-)\d+'
+                          - name: node2_id
+                            type: int
+                            attribute: tDn
+                            attribute_match_regex: '(?:(?<=protpaths-\d\d\d-)|(?<=protpaths-\d\d\d\d-))\d+(?=/pathep-)'
+                          - name: pod_id
+                            type: int
+                            attribute: tDn
+                            attribute_match_regex: '(?<=/pod-)\d+'
+                            default_static_value: '1'
+                          - name: fex_id
+                            type: int
+                            attribute: tDn
+                            attribute_match_regex: '(?<=/extpaths-)\d+'
+                          - name: module
+                            type: int
+                            attribute: tDn
+                            attribute_match_regex: '(?<=/pathep-\[eth)\d+'
+                          - name: port
+                            type: int
+                            attribute: tDn
+                            attribute_match_regex: '(?<=/pathep-\[eth\d\/)\d+'
+                          - name: channel
+                            attribute: tDn
+                            attribute_match_regex: '(?<=/pathep-\[)(?!eth).*(?=\])'
+                          - name: vlan
+                            type: int
+                            attribute: encap
+                            attribute_match_regex: '(?<=vlan-).*'
+                          - name: mode
+                            attribute: mode
+                          - name: deployment_immediacy
+                            attribute: instrImedcy
+                      - name: static_endpoints
+                        type: list_dict
+                        class: fvStCEp
+                        elements:
+                          - name: name
+                            type: string
+                            attribute: name
+                          - name: vlan
+                            type: int
+                            attribute: encap
+                            attribute_match_regex: '(?<=vlan-).*'
+                            conditions:
+                              - type: match
+                                match_regex: '^(?!vep).*$'
+                                match_attribute: type
+                          - name: mac
+                            attribute: mac
+                          - name: ip
+                            attribute: ip
+                          - name: type
+                            attribute: type
+                          - name: node_id
+                            type: int
+                            class: fvRsStCEpToPathEp
+                            attribute: tDn
+                            attribute_match_regex: '(?<=paths-)\d+'
+                          - name: node2_id
+                            type: int
+                            class: fvRsStCEpToPathEp
+                            attribute: tDn
+                            attribute_match_regex: '(?:(?<=protpaths-\d\d\d-)|(?<=protpaths-\d\d\d\d-))\d+(?=/pathep-)'
+                          - name: pod_id
+                            type: int
+                            attribute: tDn
+                            attribute_match_regex: '(?<=/pod-)\d+'
+                            default_static_value: '1'
+                          - name: module
+                            type: int
+                            class: fvRsStCEpToPathEp
+                            attribute: tDn
+                            attribute_match_regex: '(?<=/pathep-\[eth)\d+'
+                          - name: port
+                            type: int
+                            class: fvRsStCEpToPathEp
+                            attribute: tDn
+                            attribute_match_regex: '(?<=/pathep-\[eth\d\/)\d+'
+                          - name: channel
+                            class: fvRsStCEpToPathEp
+                            attribute: tDn
+                            attribute_match_regex: '(?<=/pathep-\[)(?!eth).*(?=\])'
+                          - name: additional_ips
+                            type: list
+                            class: fvStIp
+                            attribute: addr
+                      - name: subnets
+                        type: list_dict
+                        key_element: ip
+                        class: fvSubnet
+                        elements:
+                          - name: ip
+                            attribute: ip
+                          - name: description
+                            attribute: descr
+                          - name: public
+                            attribute: scope
+                            map_attribute:
+                              - attribute_regex: public
+                                mapped_value: true
+                            default_value: false
+                          - name: private
+                            attribute: scope
+                            map_attribute:
+                              - attribute_regex: private
+                                mapped_value: true
+                            default_value: false
+                          - name: shared
+                            attribute: scope
+                            map_attribute:
+                              - attribute_regex: shared
+                                mapped_value: true
+                            default_value: false
+                          - name: igmp_querier
+                            attribute: ctrl
+                            map_attribute:
+                              - attribute_regex: querier
+                                mapped_value: true
+                            default_value: false
+                          - name: nd_ra_prefix
+                            attribute: ctrl
+                            map_attribute:
+                              - attribute_regex: nd
+                                mapped_value: true
+                            default_value: false
+                          - name: no_default_gateway
+                            attribute: ctrl
+                            map_attribute:
+                              - attribute_regex: no-default-gateway
+                                mapped_value: true
+                            default_value: false
+                      - name: contracts
+                        type: dict
+                        elements:
+                          - name: consumers
+                            type: list
+                            class: fvRsCons
+                            attribute: tnVzBrCPName
+                          - name: providers
+                            type: list
+                            class: fvRsProv
+                            attribute: tnVzBrCPName
+                          - name: imported_consumers
+                            type: list
+                            class: fvRsConsIf
+                            attribute: tnVzCPIfName
+
+              - name: inb_endpoint_groups
+                type: list_dict
+                key_element: name
+                class: mgmtInB
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                  - name: vlan
+                    type: int
+                    attribute: encap
+                    attribute_match_regex: '(?<=vlan-).*'
+                  - name: bridge_domain
+                    class: mgmtRsMgmtBD
+                    attribute: tnFvBDName
+                  - name: contracts
+                    type: dict
+                    elements:
+                      - name: consumers
+                        type: list
+                        class: fvRsCons
+                        attribute: tnVzBrCPName
+                      - name: providers
+                        type: list
+                        class: fvRsProv
+                        attribute: tnVzBrCPName
+                      - name: imported_consumers
+                        type: list
+                        class: fvRsConsIf
+                        attribute: tnVzCPIfName
+
+              - name: oob_endpoint_groups
+                type: list_dict
+                key_element: name
+                class: mgmtOoB
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                  - name: oob_contracts
+                    type: dict
+                    elements:
+                      - name: providers
+                        type: list
+                        class: mgmtRsOoBProv
+                        attribute: tnVzOOBBrCPName
+
+              - name: ext_mgmt_instances
+                type: list_dict
+                key_element: name
+                class: mgmtInstP
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                  - name: subnets
+                    type: list
+                    class: mgmtSubnet
+                    attribute: ip
+                  - name: oob_contracts
+                    type: dict
+                    elements:
+                      - name: consumers
+                        type: list
+                        class: mgmtRsOoBCons
+                        attribute: tnVzOOBBrCPName
+
+              - name: l3outs
+                type: list_dict
+                ignore_filter: true
+                key_element: name
+                class: l3extOut
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                    ignore_filter: true
+                  - name: alias
+                    attribute: nameAlias
+                  - name: description
+                    attribute: descr
+                  - name: vrf
+                    class: l3extRsEctx
+                    attribute: tnFvCtxName
+                  - name: domain
+                    class: l3extRsL3DomAtt
+                    attribute: tDn
+                    attribute_match_regex: '(?<=/l3dom-).*'
+                  - name: ospf
+                    class: ospfExtP
+                    type: dict
+                    elements:
+                      - name: area
+                        attribute: areaId
+                        type: int
+                      - name: area_type
+                        attribute: areaType
+                      - name: area_cost
+                        attribute: areaCost
+                        type: int
+                  - name: node_profiles
+                    type: list_dict
+                    key_element: name
+                    class: l3extLNodeP
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: nodes
+                        type: list_dict
+                        key_element: node_id
+                        class: l3extRsNodeL3OutAtt
+                        elements:
+                          - name: node_id
+                            type: int
+                            attribute: tDn
+                            attribute_match_regex: '(?<=/node-).*'
+                          - name: pod_id
+                            type: int
+                            attribute: tDn
+                            attribute_match_regex: '(?<=/pod-)\d+'
+                            default_static_value: '1'
+                          - name: router_id
+                            attribute: rtrId
+                          - name: router_id_as_loopback
+                            attribute: rtrIdLoopBack
+                            map_boolean: true
+                          - name: static_routes
+                            type: list_dict
+                            key_element: prefix
+                            class: ipRouteP
+                            elements:
+                              - name: prefix
+                                attribute: ip
+                              - name: description
+                                attribute: descr
+                              - name: preference
+                                attribute: pref
+                                type: int
+                              - name: next_hops
+                                type: list_dict
+                                key_element: ip
+                                class: ipNexthopP
+                                elements:
+                                  - name: ip
+                                    attribute: nhAddr
+                                  - name: preference
+                                    attribute: pref
+                                    type: int
+                                  - name: type
+                                    attribute: type
+                          - name: bgp_peers
+                            type: list_dict
+                            key_element: ip
+                            class: bgpPeerP
+                            elements:
+                              - name: ip
+                                attribute: addr
+                              - name: remote_as
+                                class: bgpAsP
+                                attribute: asn
+                              - name: description
+                                attribute: descr
+                              - name: ttl
+                                attribute: ttl
+                              - name: weight
+                                attribute: weight
+                      - name: interface_profiles
+                        type: list_dict
+                        key_element: name
+                        class: l3extLIfP
+                        elements:
+                          - name: name
+                            type: string
+                            attribute: name
+                          - name: bfd_policy
+                            class: bfdRsIfPol
+                            attribute: tnBfdIfPolName
+                          - name: ospf
+                            type: dict
+                            class: ospfIfP
+                            elements:
+                              - name: ospf_interface_profile_name
+                                attribute: name
+                              - name: auth_type
+                                attribute: authType
+                              - name: auth_key
+                                attribute: authKey
+                              - name: auth_key_id
+                                attribute: authKeyId
+                                type: int
+                              - name: policy
+                                class: ospfRsIfPol
+                                attribute: tnOspfIfPolName
+                          - name: interfaces
+                            type: list_dict
+                            class: l3extRsPathL3OutAtt
+                            elements:
+                              - name: description
+                                attribute: descr
+                              - name: node_id
+                                type: int
+                                attribute: tDn
+                                attribute_match_regex: '(?<=paths-)\d+'
+                              - name: node2_id
+                                type: int
+                                attribute: tDn
+                                attribute_match_regex: '(?:(?<=protpaths-\d\d\d-)|(?<=protpaths-\d\d\d\d-))\d+(?=/pathep-)'
+                              - name: pod_id
+                                type: int
+                                attribute: tDn
+                                attribute_match_regex: '(?<=/pod-)\d+'
+                                default_static_value: '1'
+                              - name: module
+                                type: int
+                                attribute: tDn
+                                attribute_match_regex: '(?<=/pathep-\[eth)\d+'
+                              - name: port
+                                type: int
+                                attribute: tDn
+                                attribute_match_regex: '(?<=/pathep-\[eth\d\/)\d+'
+                              - name: channel
+                                attribute: tDn
+                                attribute_match_regex: '(?<=/pathep-\[)(?!eth).*(?=\])'
+                              - name: ip
+                                attribute: addr
+                              - name: svi
+                                attribute: ifInstT
+                                map_attribute:
+                                  - attribute_regex: ext-svi
+                                    mapped_value: true
+                                default_value: false
+                              - name: vlan
+                                type: int
+                                attribute: encap
+                                attribute_match_regex: '(?<=vlan-).*'
+                              - name: mac
+                                attribute: mac
+                              - name: mtu
+                                type: int
+                                attribute: mtu
+                              - name: ip_a
+                                class: l3extMember
+                                attribute: addr
+                                conditions:
+                                  - type: match
+                                    match_attribute: side
+                                    match_regex: 'A'
+                              - name: ip_b
+                                class: l3extMember
+                                attribute: addr
+                                conditions:
+                                  - type: match
+                                    match_attribute: side
+                                    match_regex: 'B'
+                              - name: ip_shared
+                                class: l3extIp
+                                attribute: addr
+                                conditions:
+                                  - type: match_parent
+                                    class: l3extMember
+                                    match_attribute: side
+                                    match_regex: 'A'
+                              - name: bgp_peers
+                                type: list_dict
+                                key_element: ip
+                                class: bgpPeerP
+                                elements:
+                                  - name: ip
+                                    attribute: addr
+                                  - name: remote_as
+                                    class: bgpAsP
+                                    type: int
+                                    attribute: asn
+                                  - name: description
+                                    attribute: descr
+                                  - name: bfd
+                                    attribute: peerCtrl
+                                    default_value: false
+                                    map_attribute:
+                                      - attribute_regex: bfd
+                                        mapped_value: true
+                                  - name: ttl
+                                    type: int
+                                    attribute: ttl
+                                  - name: weight
+                                    type: int
+                                    attribute: weight
+                                  - name: password
+                                    attribute: password
+                  - name: external_endpoint_groups
+                    type: list_dict
+                    key_element: name
+                    class: l3extInstP
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: alias
+                        attribute: nameAlias
+                      - name: description
+                        attribute: descr
+                      - name: preferred_group
+                        attribute: prefGrMemb
+                        map_boolean: true
+                      - name: subnets
+                        type: list_dict
+                        key_element: name
+                        class: l3extSubnet
+                        elements:
+                          - name: name
+                            type: string
+                            attribute: name
+                          - name: prefix
+                            attribute: ip
+                          - name: import_route_control
+                            attribute: scope
+                            map_attribute:
+                              - attribute_regex: import-rtctrl
+                                mapped_value: true
+                            default_value: false
+                          - name: export_route_control
+                            attribute: scope
+                            map_attribute:
+                              - attribute_regex: export-rtctrl
+                                mapped_value: true
+                            default_value: false
+                          - name: shared_route_control
+                            attribute: scope
+                            map_attribute:
+                              - attribute_regex: shared-rtctrl
+                                mapped_value: true
+                            default_value: false
+                          - name: import_security
+                            attribute: scope
+                            map_attribute:
+                              - attribute_regex: import-security
+                                mapped_value: true
+                            default_value: false
+                          - name: shared_security
+                            attribute: scope
+                            map_attribute:
+                              - attribute_regex: shared-security
+                                mapped_value: true
+                            default_value: false
+                          - name: bgp_route_summarization
+                            class: l3extRsSubnetToRtSumm
+                            map_class_value: true
+                            default_value: false
+                      - name: contracts
+                        type: dict
+                        elements:
+                          - name: consumers
+                            type: list
+                            class: fvRsCons
+                            attribute: tnVzBrCPName
+                          - name: providers
+                            type: list
+                            class: fvRsProv
+                            attribute: tnVzBrCPName
+                          - name: imported_consumers
+                            type: list
+                            class: fvRsConsIf
+                            attribute: tnVzCPIfName
+                  - name: import_route_map
+                    class: rtctrlProfile
+                    type: dict
+                    conditions:
+                      - type: match
+                        match_regex: default-import
+                        match_attribute: name
+                    elements:
+                      - name: description
+                        attribute: descr
+                      - name: type
+                        attribute: type
+                      - name: contexts
+                        type: list_dict
+                        key_element: name
+                        class: rtctrlCtxP
+                        elements:
+                          - name: name
+                            type: string
+                            attribute: name
+                          - name: description
+                            attribute: descr
+                          - name: action
+                            attribute: action
+                          - name: order
+                            type: int
+                            attribute: order
+                          - name: match_rule
+                            class: rtctrlRsCtxPToSubjP
+                            attribute: tnRtctrlSubjPName
+                          - name: set_rule
+                            class: rtctrlRsScopeToAttrP
+                            attribute: tnRtctrlAttrPName
+                  - name: export_route_map
+                    class: rtctrlProfile
+                    type: dict
+                    conditions:
+                      - type: match
+                        match_regex: default-export
+                        match_attribute: name
+                    elements:
+                      - name: description
+                        attribute: descr
+                      - name: type
+                        attribute: type
+                      - name: contexts
+                        type: list_dict
+                        key_element: name
+                        class: rtctrlCtxP
+                        elements:
+                          - name: name
+                            type: string
+                            attribute: name
+                          - name: description
+                            attribute: descr
+                          - name: action
+                            attribute: action
+                          - name: order
+                            type: int
+                            attribute: order
+                          - name: match_rule
+                            class: rtctrlRsCtxPToSubjP
+                            attribute: tnRtctrlSubjPName
+                          - name: set_rule
+                            class: rtctrlRsScopeToAttrP
+                            attribute: tnRtctrlAttrPName
+
+              - name: filters
+                type: list_dict
+                key_element: name
+                class: vzFilter
+                conditions:
+                  - type: no_match
+                    match_regex: '^arp$'
+                    match_attribute: name
+                  - type: no_match
+                    match_regex: '^est$'
+                    match_attribute: name
+                  - type: no_match
+                    match_regex: '^icmp$'
+                    match_attribute: name
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                  - name: alias
+                    attribute: nameAlias
+                  - name: description
+                    attribute: descr
+                  - name: entries
+                    type: list_dict
+                    key_element: name
+                    class: vzEntry
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: alias
+                        attribute: nameAlias
+                      - name: ethertype
+                        attribute: etherT
+                      - name: protocol
+                        attribute: prot
+                      - name: source_from_port
+                        type: int
+                        attribute: sFromPort
+                      - name: source_to_port
+                        type: int
+                        attribute: sToPort
+                        default_element: source_from_port
+                      - name: destination_from_port
+                        type: int
+                        attribute: dFromPort
+                      - name: destination_to_port
+                        type: int
+                        attribute: dToPort
+                        default_element: destination_from_port
+                      - name: stateful
+                        attribute: stateful
+                        map_boolean: true
+
+              - name: contracts
+                type: list_dict
+                key_element: name
+                class: vzBrCP
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                  - name: alias
+                    attribute: nameAlias
+                  - name: description
+                    attribute: descr
+                  - name: scope
+                    attribute: scope
+                  - name: subjects
+                    type: list_dict
+                    key_element: name
+                    class: vzSubj
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: alias
+                        attribute: nameAlias
+                      - name: description
+                        attribute: descr
+                      - name: service_graph
+                        class: vzRsSubjGraphAtt
+                        attribute: tnVnsAbsGraphName
+                      - name: filters
+                        type: list_dict
+                        key_element: filter
+                        class: vzRsSubjFiltAtt
+                        elements:
+                          - name: filter
+                            attribute: tnVzFilterName
+                          - name: action
+                            attribute: action
+                          - name: priority
+                            attribute: priorityOverride
+                          - name: log
+                            attribute: directives
+                            map_attribute:
+                              - attribute_regex: log
+                                mapped_value: true
+                            default_value: false
+                          - name: no_stats
+                            attribute: directives
+                            map_attribute:
+                              - attribute_regex: no-stats
+                                mapped_value: true
+                            default_value: false
+
+              - name: oob_contracts
+                type: list_dict
+                key_element: name
+                class: vzOOBBrCP
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                  - name: alias
+                    attribute: nameAlias
+                  - name: description
+                    attribute: descr
+                  - name: scope
+                    attribute: scope
+                  - name: subjects
+                    type: list_dict
+                    key_element: name
+                    class: vzSubj
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: alias
+                        attribute: nameAlias
+                      - name: description
+                        attribute: descr
+                      - name: filters
+                        type: list_dict
+                        key_element: filter
+                        class: vzRsSubjFiltAtt
+                        elements:
+                          - name: filter
+                            attribute: tnVzFilterName
+
+              - name: imported_contracts
+                type: list_dict
+                key_element: name
+                class: vzCPIf
+                elements:
+                  - name: name
+                    type: string
+                    attribute: name
+                  - name: tenant
+                    class: vzRsIf
+                    attribute: tDn
+                    attribute_match_regex: '(?<=/tn-).*(?=/brc-)'
+                  - name: contract
+                    class: vzRsIf
+                    attribute: tDn
+                    attribute_match_regex: '(?<=/brc-).*'
+
+              - name: policies
+                type: dict
+                elements:
+                  - name: ospf_interface_policies
+                    type: list_dict
+                    key_element: name
+                    class: ospfIfPol
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: description
+                        attribute: descr
+                      - name: cost
+                        type: int
+                        attribute: cost
+                      - name: passive_interface
+                        attribute: ctrl
+                        map_attribute:
+                          - attribute_regex: passive
+                            mapped_value: true
+                        default_value: false
+                      - name: mtu_ignore
+                        attribute: ctrl
+                        map_attribute:
+                          - attribute_regex: mtu-ignore
+                            mapped_value: true
+                        default_value: false
+                      - name: advertise_subnet
+                        attribute: ctrl
+                        map_attribute:
+                          - attribute_regex: advert-subnet
+                            mapped_value: true
+                        default_value: false
+                      - name: bfd
+                        attribute: ctrl
+                        map_attribute:
+                          - attribute_regex: bfd
+                            mapped_value: true
+                        default_value: false
+                      - name: hello_interval
+                        type: int
+                        attribute: helloIntvl
+                      - name: dead_interval
+                        type: int
+                        attribute: deadIntvl
+                      - name: network_type
+                        type: int
+                        attribute: nwT
+                      - name: priority
+                        type: int
+                        attribute: prio
+                      - name: lsa_retransmit_interval
+                        type: int
+                        attribute: rexmitIntvl
+                      - name: lsa_transmit_delay
+                        type: int
+                        attribute: xmitDelay
+                  - name: dhcp_relay_policies
+                    type: list_dict
+                    key_element: name
+                    class: dhcpRelayP
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: description
+                        attribute: descr
+                      - name: providers
+                        type: list_dict
+                        class: dhcpRsProv
+                        elements:
+                          - name: ip
+                            attribute: addr
+                          - name: type
+                            attribute: tDn
+                            map_attribute:
+                              - attribute_regex: /instP-
+                                mapped_value: external_epg
+                              - attribute_regex: /epg-
+                                mapped_value: epg
+                          - name: tenant
+                            attribute: tDn
+                            attribute_match_regex: '(?<=uni/tn-).*?(?=/)'
+                          - name: application_profile
+                            attribute: tDn
+                            attribute_match_regex: '(?<=/ap-).*?(?=/)'
+                          - name: endpoint_group
+                            attribute: tDn
+                            attribute_match_regex: '(?<=/epg-).*'
+                          - name: l3out
+                            attribute: tDn
+                            attribute_match_regex: '(?<=/out-).*?(?=/)'
+                          - name: external_endpoint_group
+                            attribute: tDn
+                            attribute_match_regex: '(?<=/instP-).*'
+                  - name: dhcp_option_policies
+                    type: list_dict
+                    key_element: name
+                    class: dhcpOptionPol
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: description
+                        attribute: descr
+                      - name: options
+                        type: list_dict
+                        class: dhcpOption
+                        elements:
+                          - name: name
+                            type: string
+                            attribute: name
+                          - name: id
+                            type: int
+                            attribute: id
+                          - name: data
+                            attribute: data
+                  - name: match_rules
+                    type: list_dict
+                    key_element: name
+                    class: rtctrlSubjP
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: description
+                        attribute: descr
+                      - name: prefixes
+                        type: list_dict
+                        class: rtctrlMatchRtDest
+                        elements:
+                          - name: ip
+                            attribute: ip
+                          - name: description
+                            attribute: descr
+                          - name: aggregate
+                            attribute: aggregate
+                            map_boolean: true
+                          - name: from_length
+                            type: int
+                            attribute: fromPfxLen
+                          - name: to_length
+                            type: int
+                            attribute: toPfxLen
+                  - name: set_rules
+                    type: list_dict
+                    key_element: name
+                    class: rtctrlAttrP
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: description
+                        attribute: descr
+                      - name: community_mode
+                        class: rtctrlSetComm
+                        attribute: setCriteria
+                      - name: community
+                        class: rtctrlSetComm
+                        attribute: community
+                  - name: bgp_timer_policies
+                    type: list_dict
+                    key_element: name
+                    class: bgpCtxPol
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: description
+                        attribute: descr
+                      - name: keepalive_interval
+                        type: int
+                        attribute: kaIntvl
+                      - name: hold_interval
+                        type: int
+                        attribute: holdIntvl
+                      - name: stale_interval
+                        type: int
+                        attribute: staleIntvl
+                      - name: graceful_restart_helper
+                        attribute: grCtrl
+                        default_value: false
+                        map_attribute:
+                          - attribute_regex: helper
+                            mapped_value: true
+                      - name: maximum_as_limit
+                        type: int
+                        attribute: maxAsLimit
+                  - name: bfd_interface_policies
+                    type: list_dict
+                    key_element: name
+                    class: bfdIfPol
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: description
+                        attribute: descr
+                      - name: subinterface_optimization
+                        attribute: ctrl
+                        default_value: false
+                        map_attribute:
+                          - attribute_regex: opt-subif
+                            mapped_value: true
+                      - name: detection_multiplier
+                        type: int
+                        attribute: detectMult
+                      - name: echo_admin_state
+                        attribute: echoAdminSt
+                        map_boolean: true
+                      - name: echo_rx_interval
+                        type: int
+                        attribute: echoRxIntvl
+                      - name: min_rx_interval
+                        type: int
+                        attribute: minRxIntvl
+                      - name: min_tx_interval
+                        type: int
+                        attribute: minTxIntvl
+
+              - name: services
+                type: dict
+                elements:
+                  - name: l4l7_devices
+                    type: list_dict
+                    key_element: name
+                    class: vnsLDevVip
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: alias
+                        attribute: nameAlias
+                      - name: context_aware
+                        attribute: contextAware
+                      - name: type
+                        attribute: devtype
+                      - name: function
+                        attribute: funcType
+                      - name: copy_device
+                        attribute: isCopy
+                        map_boolean: true
+                      - name: managed
+                        attribute: managed
+                        map_boolean: true
+                      - name: promiscuous_mode
+                        attribute: promMode
+                        map_boolean: true
+                      - name: service_type
+                        attribute: svcType
+                      - name: trunking
+                        attribute: trunking
+                        map_boolean: true
+                      - name: physical_domain
+                        class: vnsRsALDevToPhysDomP
+                        attribute: tDn
+                        attribute_match_regex: '(?<=/phys-).*'
+                      - name: concrete_devices
+                        type: list_dict
+                        key_element: name
+                        class: vnsCDev
+                        elements:
+                          - name: name
+                            type: string
+                            attribute: name
+                          - name: alias
+                            attribute: nameAlias
+                          - name: vcenter_name
+                            attribute: vcenterName
+                          - name: vm_name
+                            attribute: vmName
+                          - name: interfaces
+                            type: list_dict
+                            key_element: name
+                            class: vnsCIf
+                            elements:
+                              - name: name
+                                type: string
+                                attribute: name
+                              - name: alias
+                                attribute: nameAlias
+                              - name: vnic_name
+                                attribute: vnicName
+                              - name: node_id
+                                type: int
+                                class: vnsRsCIfPathAtt
+                                attribute: tDn
+                                attribute_match_regex: '(?<=paths-)\d+'
+                              - name: node2_id
+                                type: int
+                                class: vnsRsCIfPathAtt
+                                attribute: tDn
+                                attribute_match_regex: '(?:(?<=protpaths-\d\d\d-)|(?<=protpaths-\d\d\d\d-))\d+(?=/pathep-)'
+                              - name: pod_id
+                                type: int
+                                attribute: tDn
+                                attribute_match_regex: '(?<=/pod-)\d+'
+                                default_static_value: '1'
+                              - name: fex_id
+                                type: int
+                                class: vnsRsCIfPathAtt
+                                attribute: tDn
+                                attribute_match_regex: '(?<=/extpaths-)\d+(?=/)'
+                              - name: module
+                                type: int
+                                class: vnsRsCIfPathAtt
+                                attribute: tDn
+                                attribute_match_regex: '(?<=/pathep-\[eth)\d+'
+                              - name: port
+                                type: int
+                                class: vnsRsCIfPathAtt
+                                attribute: tDn
+                                attribute_match_regex: '(?<=/pathep-\[eth\d\/)\d+'
+                              - name: channel
+                                class: vnsRsCIfPathAtt
+                                attribute: tDn
+                                attribute_match_regex: '(?<=/pathep-\[)(?!eth).*(?=\])'
+                      - name: logical_interfaces
+                        type: list_dict
+                        key_element: name
+                        class: vnsLIf
+                        elements:
+                          - name: name
+                            type: string
+                            attribute: name
+                          - name: alias
+                            attribute: nameAlias
+                          - name: vlan
+                            type: int
+                            attribute: encap
+                            attribute_match_regex: '(?<=vlan-).*'
+                          - name: concrete_interfaces
+                            type: list_dict
+                            class: vnsRsCIfAttN
+                            elements:
+                              - name: device
+                                attribute: tDn
+                                attribute_match_regex: '(?<=/cDev-).*(?=/cIf-)'
+                              - name: interface_name
+                                attribute: tDn
+                                attribute_match_regex: '(?<=/cIf-\[).*(?=\])'
+                  - name: redirect_policies
+                    type: list_dict
+                    key_element: name
+                    class: vnsSvcRedirectPol
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: alias
+                        attribute: nameAlias
+                      - name: description
+                        attribute: descr
+                      - name: type
+                        attribute: destType
+                      - name: anycast
+                        attribute: AnycastEnabled
+                        map_attribute:
+                          - attribute_regex: yes
+                            mapped_value: true
+                        default_value: false
+                      - name: hashing
+                        attribute: hashingAlgorithm
+                      - name: threshold
+                        attribute: thresholdEnable
+                        map_attribute:
+                          - attribute_regex: yes
+                            mapped_value: true
+                        default_value: false
+                      - name: max_threshold
+                        attribute: maxThresholdPercent
+                        type: int
+                      - name: min_threshold
+                        attribute: minThresholdPercent
+                        type: int
+                      - name: threshold_down_action
+                        attribute: thresholdDownAction
+                      - name: resilient_hashing
+                        attribute: resilientHashEnabled
+                        map_attribute:
+                          - attribute_regex: yes
+                            mapped_value: true
+                        default_value: false
+                      - name: pod_aware
+                        attribute: programLocalPodOnly
+                        map_attribute:
+                          - attribute_regex: yes
+                            mapped_value: true
+                        default_value: false
+                      - name: l3_destinations
+                        type: list_dict
+                        class: vnsRedirectDest
+                        elements:
+                          - name: description
+                            attribute: descr
+                          - name: ip
+                            attribute: ip
+                          - name: ip_2
+                            attribute: ip2
+                          - name: mac
+                            attribute: mac
+                          - name: pod
+                            attribute: podId
+                            type: int
+                  - name: service_graph_templates
+                    type: list_dict
+                    key_element: name
+                    class: vnsAbsGraph
+                    elements:
+                      - name: name
+                        type: string
+                        attribute: name
+                      - name: alias
+                        attribute: nameAlias
+                      - name: description
+                        attribute: descr
+                      - name: template_type
+                        class: vnsAbsNode
+                        attribute: funcTemplateType
+                      - name: redirect
+                        class: vnsAbsNode
+                        attribute: routingMode
+                        default_value: false
+                        map_attribute:
+                          - attribute_regex: Redirect
+                            mapped_value: true
+                      - name: share_encapsulation
+                        class: vnsAbsNode
+                        attribute: shareEncap
+                        default_value: false
+                        map_attribute:
+                          - attribute_regex: yes
+                            mapped_value: true
+                      - name: device
+                        type: dict
+                        class: vnsRsNodeToLDev
+                        elements:
+                          - name: tenant
+                            attribute: tDn
+                            attribute_match_regex: '(?<=/tn-)(?!eth).*(?=/lDevVip-)'
+                            default_reference: ['apic', 'tenants', 'name']
+                          - name: name
+                            type: string
+                            attribute: tDn
+                            attribute_match_regex: '(?<=/lDevVip-)(?!eth).*'
+                  - name: device_selection_policies
+                    type: list_dict
+                    class: vnsLDevCtx
+                    elements:
+                      - name: contract
+                        attribute: ctrctNameOrLbl
+                      - name: service_graph_template
+                        attribute: graphNameOrLbl
+                      - name: consumer
+                        type: dict
+                        class: vnsLIfCtx
+                        conditions:
+                          - type: match
+                            match_attribute: connNameOrLbl
+                            match_regex: 'consumer'
+                        elements:
+                          - name: l3_destination
+                            attribute: l3Dest
+                            map_attribute:
+                              - attribute_regex: yes
+                                mapped_value: true
+                            default_value: false
+                          - name: permit_logging
+                            attribute: permitLog
+                            map_attribute:
+                              - attribute_regex: yes
+                                mapped_value: true
+                            default_value: false
+                          - name: redirect_policy
+                            type: dict
+                            class: vnsRsLIfCtxToSvcRedirectPol
+                            elements:
+                              - name: tenant
+                                attribute: tDn
+                                attribute_match_regex: '(?<=/tn-).*(?=/svcCont/svcRedirectPol-)'
+                                default_reference: ['apic', 'tenants', 'name']
+                              - name: name
+                                type: string
+                                attribute: tDn
+                                attribute_match_regex: '(?<=/svcCont/svcRedirectPol-).*'
+                          - name: logical_interface
+                            attribute: tDn
+                            class: vnsRsLIfCtxToLIf
+                            attribute_match_regex: '(?<=/lIf-).*'
+                          - name: bridge_domain
+                            type: dict
+                            class: vnsRsLIfCtxToBD
+                            elements:
+                              - name: tenant
+                                attribute: tDn
+                                attribute_match_regex: '(?<=/tn-).*(?=/BD-)'
+                                default_reference: ['apic', 'tenants', 'name']
+                              - name: name
+                                type: string
+                                attribute: tDn
+                                attribute_match_regex: '(?<=/BD-).*'
+                          - name: external_endpoint_group
+                            type: dict
+                            class: vnsRsLIfCtxToInstP
+                            elements:
+                              - name: tenant
+                                attribute: tDn
+                                attribute_match_regex: '(?<=/tn-).*(?=/out-)'
+                                default_reference: ['apic', 'tenants', 'name']
+                              - name: l3out
+                                attribute: tDn
+                                attribute_match_regex: '(?<=/out-).*(?=/instP-)'
+                              - name: name
+                                type: string
+                                attribute: tDn
+                                attribute_match_regex: '(?<=/instP-).*'
+                              - name: redistribute
+                                type: dict
+                                elements:
+                                  - name: bgp
+                                    attribute: redistribute
+                                    map_attribute:
+                                      - attribute_regex: bgp
+                                        mapped_value: true
+                                    default_value: false
+                                  - name: ospf
+                                    attribute: redistribute
+                                    map_attribute:
+                                      - attribute_regex: ospf
+                                        mapped_value: true
+                                    default_value: false
+                                  - name: connected
+                                    attribute: redistribute
+                                    map_attribute:
+                                      - attribute_regex: connected
+                                        mapped_value: true
+                                    default_value: false
+                                  - name: static
+                                    attribute: redistribute
+                                    map_attribute:
+                                      - attribute_regex: static
+                                        mapped_value: true
+                                    default_value: false
+                      - name: provider
+                        type: dict
+                        class: vnsLIfCtx
+                        conditions:
+                          - type: match
+                            match_attribute: connNameOrLbl
+                            match_regex: 'provider'
+                        elements:
+                          - name: l3_destination
+                            attribute: l3Dest
+                            map_attribute:
+                              - attribute_regex: yes
+                                mapped_value: true
+                            default_value: false
+                          - name: permit_logging
+                            attribute: permitLog
+                            map_attribute:
+                              - attribute_regex: yes
+                                mapped_value: true
+                            default_value: false
+                          - name: redirect_policy
+                            type: dict
+                            class: vnsRsLIfCtxToSvcRedirectPol
+                            elements:
+                              - name: tenant
+                                attribute: tDn
+                                attribute_match_regex: '(?<=/tn-).*(?=/svcCont/svcRedirectPol-)'
+                                default_reference: ['apic', 'tenants', 'name']
+                              - name: name
+                                type: string
+                                attribute: tDn
+                                attribute_match_regex: '(?<=/svcCont/svcRedirectPol-).*'
+                          - name: logical_interface
+                            attribute: tDn
+                            class: vnsRsLIfCtxToLIf
+                            attribute_match_regex: '(?<=/lIf-).*'
+                          - name: bridge_domain
+                            type: dict
+                            class: vnsRsLIfCtxToBD
+                            elements:
+                              - name: tenant
+                                attribute: tDn
+                                attribute_match_regex: '(?<=/tn-).*(?=/BD-)'
+                                default_reference: ['apic', 'tenants', 'name']
+                              - name: name
+                                type: string
+                                attribute: tDn
+                                attribute_match_regex: '(?<=/BD-).*'
+                          - name: external_endpoint_group
+                            type: dict
+                            class: vnsRsLIfCtxToInstP
+                            elements:
+                              - name: tenant
+                                attribute: tDn
+                                attribute_match_regex: '(?<=/tn-).*(?=/out-)'
+                                default_reference: ['apic', 'tenants', 'name']
+                              - name: l3out
+                                attribute: tDn
+                                attribute_match_regex: '(?<=/out-).*(?=/instP-)'
+                              - name: name
+                                type: string
+                                attribute: tDn
+                                attribute_match_regex: '(?<=/instP-).*'
+                              - name: redistribute
+                                type: dict
+                                elements:
+                                  - name: bgp
+                                    attribute: redistribute
+                                    map_attribute:
+                                      - attribute_regex: bgp
+                                        mapped_value: true
+                                    default_value: false
+                                  - name: ospf
+                                    attribute: redistribute
+                                    map_attribute:
+                                      - attribute_regex: ospf
+                                        mapped_value: true
+                                    default_value: false
+                                  - name: connected
+                                    attribute: redistribute
+                                    map_attribute:
+                                      - attribute_regex: connected
+                                        mapped_value: true
+                                    default_value: false
+                                  - name: static
+                                    attribute: redistribute
+                                    map_attribute:
+                                      - attribute_regex: static
+                                        mapped_value: true
+                                    default_value: false

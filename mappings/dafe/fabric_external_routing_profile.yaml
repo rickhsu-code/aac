@@ -1,0 +1,20 @@
+---
+mappings:
+  - xls_sheet: fabric_external_routing_profile
+    key_element: ipn_leaked_subnet
+    elements:
+      - name: fabricId
+        class: fvFabricExtConnP
+        attribute: id
+        mandatory: true
+        conditions:
+          - type: is_parent_parent
+      - name: fabric_external_routing_profile
+        class: l3extFabricExtRoutingP
+        attribute: name
+        mandatory: true
+        conditions:
+          - type: is_parent
+      - name: ipn_leaked_subnet
+        class: l3extSubnet
+        attribute: ip

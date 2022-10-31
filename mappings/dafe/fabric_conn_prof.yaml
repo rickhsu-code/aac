@@ -1,0 +1,31 @@
+---
+mappings:
+  - xls_sheet: fabric_conn_prof
+    key_element: fabricId
+    elements:
+      - name: fabricId
+        class: fvFabricExtConnP
+        attribute: id
+        ignore_filter: true
+        mandatory: true
+        unique: true
+      - name: community_route_target
+        class: fvFabricExtConnP
+        ignore_filter: true
+        attribute: rt
+        attribute_match_regex: '(?<=extended:as2-nn4:).*'
+      - name: fabric_external_routing_profile
+        class: l3extFabricExtRoutingP
+        attribute: name
+        conditions:
+          - type: is_child
+      - name: bgp_peering_type
+        class: fvPeeringP
+        attribute: type
+        conditions:
+          - type: is_child
+      - name: bgp_password
+        class: fvPeeringP
+        attribute: password
+        conditions:
+          - type: is_child

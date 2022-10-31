@@ -1,0 +1,13 @@
+---
+mappings:
+  - xls_sheet: pod_tep_pool
+    key_element: pod_id
+    elements:
+      - name: pod_id
+        class: fabricSetupP
+        attribute: podId
+        mandatory: true
+        unique: true
+      - name: tep_pool
+        class: fabricSetupP
+        attribute: tepPool

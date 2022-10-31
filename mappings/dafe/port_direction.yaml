@@ -1,0 +1,21 @@
+---
+mappings:
+  - xls_sheet: port_direction
+    key_element: direction
+    elements:
+      - name: direction
+        class: infraRsPortDirection
+        attribute: direc
+        mandatory: true
+      - name: pod_id
+        class: infraRsPortDirection
+        attribute: tDn
+        attribute_match_regex: '(?<=topology/pod-)\d+(?=/p)'
+      - name: node_id
+        class: infraRsPortDirection
+        attribute: tDn
+        attribute_match_regex: '(?<=paths-)\d+'
+      - name: interface_slot_port
+        class: infraRsPortDirection
+        attribute: tDn
+        attribute_match_regex: '(?<=pathep-\[eth).*(?=\])'

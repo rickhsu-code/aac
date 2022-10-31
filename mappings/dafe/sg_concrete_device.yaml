@@ -1,0 +1,166 @@
+---
+mappings:
+  - xls_sheet: sg_concrete_device
+    key_element: name
+    elements:
+      - name: tenant
+        class: fvTenant
+        attribute: name
+        conditions:
+          - type: is_parent_parent
+      - name: device
+        class: vnsLDevVip
+        attribute: name
+        conditions:
+          - type: is_parent
+      - name: name
+        class: vnsCDev
+        attribute: name
+      - name: devtype
+        class: vnsCDev
+        attribute: vmName
+        map_attribute:
+          - attribute_regex: '.+'
+            mapped_value: 'VIRTUAL'
+        default_value: ''
+        mandatory: true
+      - name: vCenterName
+        class: vnsCDev
+        attribute: vcenterName
+      - name: VMname
+        class: vnsCDev
+        attribute: vmName
+      - name: intf_name
+        class: vnsCIf
+        attribute: name
+        conditions:
+          - type: is_child
+      - name: vnicName
+        class: vnsCIf
+        attribute: vnicName
+        conditions:
+          - type: is_child
+
+  - xls_sheet: sg_concrete_device
+    key_element:
+    elements:
+      - name: tenant
+        class: fvTenant
+        attribute: name
+        conditions:
+          - type: is_parent_parent
+      - name: device
+        class: vnsLDevVip
+        attribute: name
+        conditions:
+          - type: is_parent
+      - name: name
+        class: vnsCDev
+        attribute: name
+      - name: devtype
+        class: vnsCDev
+        attribute: vmName
+        map_attribute:
+          - attribute_regex: '^$'
+            mapped_value: 'PHYSICAL'
+        default_value: ''
+        mandatory: true
+      - name: intf_name
+        class: vnsCIf
+        attribute: name
+        conditions:
+          - type: is_child
+      - name: connection_type
+        class: vnsRsCIfPathAtt
+        attribute: tDn
+        map_attribute:
+          - attribute_regex: '/protpaths-'
+            mapped_value: vPC
+          - attribute_regex: '/pathep-\[(?!eth)'
+            mapped_value: PC
+        default_value: ''
+        mandatory: true
+        conditions:
+          - type: is_child_child
+      - name: pod_id
+        class: vnsRsCIfPathAtt
+        attribute: tDn
+        attribute_match_regex: '(?<=topology/pod-)\d+(?=/p)'
+        conditions:
+          - type: is_child_child
+      - name: left_node_id
+        class: vnsRsCIfPathAtt
+        attribute: tDn
+        attribute_match_regex: '(?<=paths-)\d+'
+        conditions:
+          - type: is_child_child
+      - name: right_node_id
+        class: vnsRsCIfPathAtt
+        attribute: tDn
+        attribute_match_regex: '(?<=\d-)\d+(?=/pathep-\[)'
+        conditions:
+          - type: is_child_child
+      - name: interface_policy_group
+        class: vnsRsCIfPathAtt
+        attribute: tDn
+        attribute_match_regex: '(?<=pathep-\[).*(?=\])'
+        conditions:
+          - type: is_child_child
+
+  - xls_sheet: sg_concrete_device
+    key_element:
+    elements:
+      - name: tenant
+        class: fvTenant
+        attribute: name
+        conditions:
+          - type: is_parent_parent
+      - name: device
+        class: vnsLDevVip
+        attribute: name
+        conditions:
+          - type: is_parent
+      - name: name
+        class: vnsCDev
+        attribute: name
+      - name: devtype
+        class: vnsCDev
+        attribute: vmName
+        map_attribute:
+          - attribute_regex: '^$'
+            mapped_value: 'PHYSICAL'
+        default_value: ''
+        mandatory: true
+      - name: intf_name
+        class: vnsCIf
+        attribute: name
+        conditions:
+          - type: is_child
+      - name: connection_type
+        class: vnsRsCIfPathAtt
+        attribute: tDn
+        map_attribute:
+          - attribute_regex: '/pathep-\[eth'
+            mapped_value: Access
+        default_value: ''
+        mandatory: true
+        conditions:
+          - type: is_child_child
+      - name: pod_id
+        class: vnsRsCIfPathAtt
+        attribute: tDn
+        attribute_match_regex: '(?<=topology/pod-)\d+(?=/p)'
+        conditions:
+          - type: is_child_child
+      - name: left_node_id
+        class: vnsRsCIfPathAtt
+        attribute: tDn
+        attribute_match_regex: '(?<=paths-)\d+'
+        conditions:
+          - type: is_child_child
+      - name: access_port_id
+        class: vnsRsCIfPathAtt
+        attribute: tDn
+        attribute_match_regex: '(?<=pathep-\[eth).*(?=\])'
+        conditions:
+          - type: is_child_child

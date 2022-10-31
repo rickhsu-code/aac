@@ -1,0 +1,52 @@
+---
+mappings:
+  - xls_sheet: l3out_node_profile
+    key_element: node_id
+    elements:
+      - name: tenant
+        class: fvTenant
+        attribute: name
+        conditions:
+          - type: is_parent_parent_parent
+      - name: l3out
+        class: l3extOut
+        attribute: name
+        conditions:
+          - type: is_parent_parent
+      - name: name
+        class: l3extLNodeP
+        attribute: name
+        conditions:
+          - type: is_parent
+      - name: router_id
+        class: l3extRsNodeL3OutAtt
+        attribute: rtrId
+      - name: router_id_as_loopback
+        class: l3extRsNodeL3OutAtt
+        attribute: rtrIdLoopBack
+      - name: pod_id
+        class: l3extRsNodeL3OutAtt
+        attribute: tDn
+        attribute_match_regex: '(?<=/pod-)\d+'
+      - name: node_id
+        class: l3extRsNodeL3OutAtt
+        attribute: tDn
+        attribute_match_regex: '(?<=/node-)\d+'
+        mandatory: true
+      - name: loopback_ip
+        class: l3extLoopBackIfP
+        attribute: addr
+        conditions:
+          - type: is_child
+      - name: enable_golf
+        class: l3extInfraNodeP
+        attribute: fabricExtCtrlPeering
+        default_value: "no"
+        conditions:
+          - type: is_child
+      - name: enable_mpod
+        class: l3extInfraNodeP
+        attribute: fabricExtCtrlPeering
+        default_value: "no"
+        conditions:
+          - type: is_child

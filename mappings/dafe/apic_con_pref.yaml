@@ -1,0 +1,9 @@
+---
+mappings:
+  - xls_sheet: apic_con_pref
+    key_element: apic_connectivity_preference
+    elements:
+      - name: apic_connectivity_preference
+        class: mgmtConnectivityPrefs
+        attribute: interfacePref
+        mandatory: true

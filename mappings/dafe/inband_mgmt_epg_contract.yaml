@@ -1,0 +1,43 @@
+---
+mappings:
+  - xls_sheet: inband_mgmt_epg_contract
+    key_element: contract
+    elements:
+      - name: name
+        class: mgmtInB
+        attribute: name
+        mandatory: true
+        conditions:
+          - type: is_parent
+      - name: contract_qos_class
+        class: fvRsCons
+        attribute: prio
+      - name: contract
+        class: fvRsCons
+        attribute: tnVzBrCPName
+        mandatory: true
+      - name: consumed_ctr
+        value: 'yes'
+      - name: provided_ctr
+        value: 'no'
+
+  - xls_sheet: inband_mgmt_epg_contract
+    key_element: contract
+    elements:
+      - name: name
+        class: mgmtInB
+        attribute: name
+        mandatory: true
+        conditions:
+          - type: is_parent
+      - name: contract_qos_class
+        class: fvRsProv
+        attribute: prio
+      - name: contract
+        class: fvRsProv
+        attribute: tnVzBrCPName
+        mandatory: true
+      - name: consumed_ctr
+        value: 'no'
+      - name: provided_ctr
+        value: 'yes'

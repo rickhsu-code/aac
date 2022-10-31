@@ -1,0 +1,18 @@
+---
+mappings:
+  - xls_sheet: pod_connection_profile
+    key_element: pod_id
+    elements:
+      - name: fabricId
+        class: fvFabricExtConnP
+        attribute: id
+        mandatory: true
+        conditions:
+          - type: is_parent
+      - name: pod_id
+        class: fvPodConnP
+        attribute: id
+        mandatory: true
+      - name: pod_data_plane_tep
+        class: fvIp
+        attribute: addr

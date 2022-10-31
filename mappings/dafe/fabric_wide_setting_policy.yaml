@@ -1,0 +1,21 @@
+---
+mappings:
+  - xls_sheet: fabric_wide_setting_policy
+    key_element: disable_remote_endpoint_learning
+    elements:
+      - name: disable_remote_endpoint_learning
+        class: infraSetPol
+        attribute: unicastXrEpLearnDisable
+        mandatory: true
+      - name: enforce_subnet_check
+        class: infraSetPol
+        attribute: enforceSubnetCheck
+      - name: reallocate_gipo
+        class: infraSetPol
+        attribute: reallocateGipo
+      - name: enforce_domain_validation
+        class: infraSetPol
+        attribute: domainValidation
+      - name: opflex_client_authentication
+        class: infraSetPol
+        attribute: opflexpAuthenticateClients

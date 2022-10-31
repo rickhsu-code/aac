@@ -1,0 +1,63 @@
+---
+mappings:
+  - xls_sheet: node_provisioning
+    key_element: node_id
+    elements:
+      - name: node_id
+        class: fabricNodeIdentP
+        attribute: nodeId
+        mandatory: true
+        unique: true
+      - name: name
+        class: fabricNodeIdentP
+        attribute: name
+      - name: serial_number
+        class: fabricNodeIdentP
+        attribute: serial
+      - name: oob_ip
+        class: mgmtRsOoBStNode
+        attribute: addr
+        conditions:
+          - type: match
+            match_attribute: tDn
+            match_regex: node-%%key%%
+      - name: oob_gw
+        class: mgmtRsOoBStNode
+        attribute: gw
+        conditions:
+          - type: match
+            match_attribute: tDn
+            match_regex: node-%%key%%
+      - name: inband_ip
+        class: mgmtRsInBStNode
+        attribute: addr
+        conditions:
+          - type: match
+            match_attribute: tDn
+            match_regex: node-%%key%%
+      - name: inband_gw
+        class: mgmtRsInBStNode
+        attribute: gw
+        conditions:
+          - type: match
+            match_attribute: tDn
+            match_regex: node-%%key%%
+      - name: pod_id
+        class: fabricNodeIdentP
+        attribute: podId
+      - name: firmware_group
+        class: firmwareFwGrp
+        attribute: name
+        conditions:
+          - type: match_child
+            class: fabricNodeBlk
+            match_attribute: from_
+            match_regex: '%%key%%'
+      - name: maintenance_group
+        class: maintMaintGrp
+        attribute: name
+        conditions:
+          - type: match_child
+            class: fabricNodeBlk
+            match_attribute: from_
+            match_regex: '%%key%%'
