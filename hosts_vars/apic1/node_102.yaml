@@ -1,0 +1,8 @@
+---
+apic:
+  interface_policies:
+    nodes:
+      - id: 102
+        interfaces:
+          - port: 1
+            policy_group: 10G-SERVER

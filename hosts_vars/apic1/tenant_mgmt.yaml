@@ -1,0 +1,53 @@
+---
+apic:
+  tenants:
+    - name: mgmt
+
+      inb_endpoint_groups:
+        - name: INB1
+          vlan: 2
+          bridge_domain: inb
+          contracts:
+            providers:
+              - STD-CON1
+
+      oob_endpoint_groups:
+        - name: OOB
+          oob_contracts:
+            providers:
+              - OOB-CON1
+        - name: OOB2
+
+      ext_mgmt_instances:
+        - name: EXT1
+          subnets:
+            - 0.0.0.0/0
+          oob_contracts:
+            consumers:
+              - OOB-CON1
+
+      filters:
+        - name: FILTER1
+          entries:
+            - name: HTTPS
+              ethertype: ip
+              protocol: tcp
+              destination_from_port: 443
+        - name: OOB-FILTER1
+          entries:
+            - name: ALL
+              ethertype: unspecified
+
+      contracts:
+        - name: STD-CON1
+          subjects:
+            - name: SUB1
+              filters:
+                - filter: FILTER1
+
+      oob_contracts:
+        - name: OOB-CON1
+          subjects:
+            - name: OOB-SUB1
+              filters:
+                - filter: OOB-FILTER1

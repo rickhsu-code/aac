@@ -1,0 +1,59 @@
+---
+apic_mode: only_changed
+apic_username: ansible
+apic_private_key: |
+  -----BEGIN PRIVATE KEY-----
+  MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBANTlnJIVr9OhmAXn
+  fDCWCXwJHNduQew1LECdpZ0F1rgfD36qn4htlwkH3djVzgGmu8RdTQVGS+qh7uvh
+  jL+oqZ7zkh+ZhsRxdirEkQDXPbydAkoimVWjws0HvjoWRwDz4Cf17SNQzcyoexbi
+  RBQFG+iK/nnj9VR/Enos03iWiRfXAgMBAAECgYBTwmJvNwkOAi2FZSV/GAhzPEKU
+  n1RgUisu4NcfiASKO+4kr4xEaJlbfDTT8ooyLB8DipGa2aVUkpElTH/Lh9fzcbJb
+  yYbNY2GYU3QDi3HiBnVNFMm/Z0CfsJrRwR1xeVWKnV07NuDWqz9/w65xKc1WyX3r
+  0pgzXlypF3keMTfKAQJBAO6yYES0NmUozoYK63L3PQ187IShtKrBv1+pitsDc52U
+  gBNpSbfqmWL1P41WFhZ5ByB7ID5u7J534KLxyclU1yECQQDkVHQnIAJPgmHVZV5k
+  dbRMVKP4ctx0hB8yvTWqePtwHqjjeD9icDYXJ4dk/f0OV+TDgaEgrftP4kAPdZpd
+  d6f3AkEAyG+Q1yBc7OUvRu+0dn2WDtVv5o/DHgBDqxi7ON3VH+WrBqHK/V1KIAbA
+  rvYy5fwLOAMsOED9ALS5NRrDzwQnAQJAUzYkDo4vyWIu3WJQADSVPKwsBcN2bFAq
+  PoeOI05r8/R4gE22a92RGOcjBL87lhqaGFYJrqs5R2ehCQFG/IE7CQJAbrE228D4
+  Qh8j6JxBs/bgdWCJ4yqqvb3l0/OsRn2ZiXQjpsFwXA2nDf47UvN1WrKZtBKUxTIf
+  9mcD9TG+igc/HA==
+  -----END PRIVATE KEY-----
+apic_public_cert: |
+  -----BEGIN CERTIFICATE-----
+  MIIB8TCCAVoCCQC1fWFVBBN/BDANBgkqhkiG9w0BAQsFADA8MRAwDgYDVQQDDAdh
+  bnNpYmxlMQ4wDAYDVQQKDAVDaXNjbzELMAkGA1UECwwCQ1gxCzAJBgNVBAYTAlVT
+  MCAXDTE5MDUxNDE4Mzc0NVoYDzIxMTkwNDIwMTgzNzQ1WjA8MRAwDgYDVQQDDAdh
+  bnNpYmxlMQ4wDAYDVQQKDAVDaXNjbzELMAkGA1UECwwCQ1gxCzAJBgNVBAYTAlVT
+  MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDU5ZySFa/ToZgF53wwlgl8CRzX
+  bkHsNSxAnaWdBda4Hw9+qp+IbZcJB93Y1c4BprvEXU0FRkvqoe7r4Yy/qKme85If
+  mYbEcXYqxJEA1z28nQJKIplVo8LNB746FkcA8+An9e0jUM3MqHsW4kQUBRvoiv55
+  4/VUfxJ6LNN4lokX1wIDAQABMA0GCSqGSIb3DQEBCwUAA4GBAFVPScMEESle01WX
+  GASnupBAgX3NnJuSKo/ReOzagFjZj4RqmaE2XgoHfMjb7/wHfNsuDB3aZ/6gg22c
+  ARrqj23UtwyWtgVjzLipaqmfDLXtQe54qO81rMsd6wnhy9AUZwPbnELe4tcrQrlM
+  khsvmhqSFHxtVsIzJgwUs4kGU39i
+  -----END CERTIFICATE-----
+apic_test_username: test-user
+apic_test_password: C1sco123
+apic_mso_username: mso-user
+apic_mso_password: C1sco123
+apic_admin_password: C1sco123
+apic_option_render: True
+apic_option_configure: True
+apic_option_delete: True
+
+mso_mode: only_changed
+mso_username: ansible
+mso_password: C1sco123!C1sco123!
+mso_test_username: test-user
+mso_test_password: C1sco123!C1sco123!
+mso_option_render: True
+mso_option_configure: True
+mso_option_delete: True
+mso_option_deploy: True
+
+nae_host: "{{ lookup('ansible.builtin.env', 'NAE_HOST') }}"
+nae_username: admin
+nae_password: "{{ lookup('ansible.builtin.env', 'NAE_PASSWORD') }}"
+nae_ignore_smart_events:
+  - APP_EPG_NOT_DEPLOYED
+  - APP_EPG_HAS_NO_CONTRACT_IN_ENFORCED_VRF

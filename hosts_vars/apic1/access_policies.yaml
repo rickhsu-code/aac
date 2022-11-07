@@ -1,0 +1,123 @@
+---
+apic:
+  access_policies:
+    infra_vlan: 4
+
+    vlan_pools:
+      - name: STATIC1
+        ranges:
+          - from: 100
+            to: 200
+      - name: VMM1
+        allocation: dynamic
+        ranges:
+          - from: 2000
+            to: 2099
+      - name: ROUTED1
+        ranges:
+          - from: 3000
+            to: 3099
+
+    physical_domains:
+      - name: PHYSICAL1
+        vlan_pool: STATIC1
+
+    routed_domains:
+      - name: ROUTED1
+        vlan_pool: ROUTED1
+
+    aaeps:
+      - name: AAEP1
+        physical_domains:
+          - PHYSICAL1
+        routed_domains:
+          - ROUTED1
+        vmware_vmm_domains:
+          - VMM1
+
+    interface_policies:
+      cdp_policies:
+        - name: CDP-ENABLED
+          admin_state: true
+        - name: CDP-DISABLED
+          admin_state: false
+      lldp_policies:
+        - name: LLDP-ENABLED
+          admin_rx_state: true
+          admin_tx_state: true
+        - name: LLDP-DISABLED
+          admin_rx_state: false
+          admin_tx_state: false
+      link_level_policies:
+        - name: 10G
+          speed: 10G
+          auto: true
+          fec_mode: inherit
+        - name: 100G
+          speed: 100G
+      port_channel_policies:
+        - name: LACP-ACTIVE
+          mode: active
+        - name: MAC-PINNING
+          mode: mac-pin
+      port_channel_member_policies:
+        - name: FAST
+          rate: fast
+          priority: 32768
+        - name: NORMAL
+          rate: normal
+      spanning_tree_policies:
+        - name: BPDU-FILTER
+          bpdu_filter: true
+        - name: BPDU-GUARD
+          bpdu_guard: true
+      mcp_policies:
+        - name: MCP-ENABLED
+          admin_state: true
+        - name: MCP-DISABLED
+          admin_state: false
+      l2_policies:
+        - name: PORT-LOCAL
+          vlan_scope: portlocal
+        - name: GLOBAL
+      storm_control_policies:
+        - name: 10P
+          broadcast_burst_rate: 10
+          broadcast_rate: 10
+          multicast_burst_rate: 10
+          multicast_rate: 10
+          unknown_unicast_burst_rate: 10
+          unknown_unicast_rate: 10
+
+    spine_interface_policy_groups:
+      - name: IPN1
+        link_level_policy: 10G
+        cdp_policy: CDP-ENABLED
+        aaep: AAEP1
+
+    switch_policies:
+      forwarding_scale_policies:
+        - name: HIGH-DUAL-STACK
+          profile: high-dual-stack
+        - name: DUAL-STACK
+          profile: dual-stack
+
+    leaf_switch_policy_groups:
+      - name: ALL_LEAFS
+        forwarding_scale_policy: HIGH-DUAL-STACK
+
+    leaf_interface_policy_groups:
+      - name: 10G-SERVER
+        type: access
+        link_level_policy: 10G
+        cdp_policy: CDP-ENABLED
+        lldp_policy: LLDP-ENABLED
+        spanning_tree_policy: BPDU-FILTER
+        mcp_policy: MCP-ENABLED
+        l2_policy: GLOBAL
+        storm_control_policy: 10P
+        aaep: AAEP1
+      - name: ROUTER1
+        type: access
+        link_level_policy: 10G
+        aaep: AAEP1

@@ -1,0 +1,113 @@
+---
+mso:
+  schemas:
+    - name: S1
+      templates:
+        - name: TEMPLATE1
+          tenant: MSO1
+
+          vrfs:
+            - name: VRF1
+
+          bridge_domains:
+            - name: BD1
+              dhcp_relay_policy: REL1
+              vrf:
+                name: VRF1
+              subnets:
+                - ip: 1.1.1.1/24
+              sites:
+                - name: APIC1
+                  l3outs:
+                    - L3OUT1
+            - name: BD2
+              vrf:
+                name: VRF1
+              subnets:
+                - ip: 2.1.1.1/24
+
+          l3outs:
+            - name: L3OUT1
+              vrf:
+                name: VRF1
+
+          application_profiles:
+            - name: AP1
+              endpoint_groups:
+                - name: EPG1
+                  bridge_domain:
+                    name: BD1
+                  contracts:
+                    providers:
+                      - name: CONTRACT1
+                  sites:
+                    - name: APIC1
+                      physical_domains:
+                        - name: PHYSICAL1
+                      vmware_vmm_domains:
+                        - name: VMM1
+                      static_ports:
+                        - type: port
+                          pod: 1
+                          node: 101
+                          port: 40
+                          vlan: 234
+                - name: EPG2
+                  bridge_domain:
+                    name: BD2
+
+          external_endpoint_groups:
+            - name: EXT-EPG1
+              vrf:
+                name: VRF1
+              subnets:
+                - prefix: 0.0.0.0/0
+              contracts:
+                consumers:
+                  - name: CONTRACT1
+              sites:
+                - name: APIC1
+                  tenant: MSO1
+                  l3out: L3OUT1
+
+          filters:
+            - name: FILTER1
+              entries:
+                - name: HTTP
+                  ethertype: ip
+                  protocol: tcp
+                  destination_from_port: 80
+
+          contracts:
+            - name: CONTRACT1
+              filters:
+                - name: FILTER1
+              service_graph:
+                name: SG1
+                nodes:
+                  - name: FW1
+                    provider:
+                      bridge_domain: BD1
+                      sites:
+                        - name: APIC1
+                          device: DEV1
+                          logical_interface: INT1
+                          redirect_policy: PBR1
+                    consumer:
+                      bridge_domain: BD1
+                      sites:
+                        - name: APIC1
+                          device: DEV1
+                          logical_interface: INT1
+                          redirect_policy: PBR1
+
+          service_graphs:
+            - name: SG1
+              nodes:
+                - name: FW1
+                  sites:
+                    - name: APIC1
+                      device: DEV1
+
+          sites:
+            - APIC1

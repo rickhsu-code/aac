@@ -1,0 +1,20 @@
+---
+apic:
+  interface_policies:
+    nodes:
+      - id: 101
+        interfaces:
+          - port: 1
+            policy_group: 10G-SERVER
+          - port: 2
+            policy_group: 10G-SERVER
+          - port: 3
+            policy_group: 10G-SERVER
+          - port: 4
+            policy_group: 10G-SERVER
+          - port: 5
+            description: reserved
+          - port: 6
+            policy_group: ROUTER1
+          - port: 13
+            policy_group: 10G-SERVER

@@ -1,0 +1,70 @@
+---
+mso:
+  version: 2.2.4e
+
+  bootstrap:
+    admin_password: C1sco123456!
+    keyring:
+      name: KEYRING
+      certificate: "-----BEGIN CERTIFICATE-----\nMIICyzCCAbMCCQCUc/SvuffglTANBgkqhkiG9w0BAQsFADAvMQswCQYDVQQGEwJE\nRTERMA8GA1UEBwwITGFMYUxhbmQxDTALBgNVBAoMBENTQ08wHhcNMjAwNzAxMTQw\nODI1WhcNMjYwMjA4MTQwODI1WjAgMQswCQYDVQQGEwJERTERMA8GA1UEBwwITGFM\nYUxhbmQwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC2KTuvhTSK3bYC\n8thn47aI6Hj0HLLDkqS72M7KSF6kCEFn2lxC8yKQ1PpHEyRxEeqKD5+V3ndC5Nun\nwqRPwA+qHyAJ+qKMqrmbE98KxuKeavyGfroLvMYRb7UUnCPsLOUpwimm3jWw2Jvz\nMevb8q5kXJuPPWGIZ6DoUliJKRwiW62qlY/zq+wbweij4NzzMM+Xiaw9KzGnn0GY\nmeeKEDdO4Q0gLo89FLXpoEBptfhqYWWqrlQNYUizew7MCKhYNjOn8D/clvD7Qynn\nkFlHEnAugR8TWgXiujZAZuUFvImu++KDdzCX1PTa7Q1NN1hjuaK1WgEqeUEQWmOD\n68FdILFrAgMBAAEwDQYJKoZIhvcNAQELBQADggEBAA7BcY4rMsc2kggoZ6MQv0Pc\nlPpM+cowoRWhUaKMveLrUJoAtUshLn8MneDWopPFx2tXWw+RfBlsbcQUWkonEFb1\noVdbBIoLT3VH/VKDUNdYa43KuugKe2nCba7Fpya54HCC2jtIv+W7SIZuAhu1937x\nOF3O8itHhBMW5/teX/Uo3JPjE4JoFPoQ7P6KmertvWAIFvQB/1oFQhJ6rmkNYjKY\nf4n71cuGmduTWzKv7UoG4nf5YoKC0tZQfOCYU9W7ywnvJThaSN0ZUf3Dqa2WB4Zx\n91bgkeI6vpJLPnjyAsmbNRePNj1xgXC5YMcN5LiGhsMiep9yBqJR1Knq80J0DwE=\n-----END CERTIFICATE-----"
+      private_key: "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEAtik7r4U0it22AvLYZ+O2iOh49Byyw5Kku9jOykhepAhBZ9pc\nQvMikNT6RxMkcRHqig+fld53QuTbp8KkT8APqh8gCfqijKq5mxPfCsbinmr8hn66\nC7zGEW+1FJwj7CzlKcIppt41sNib8zHr2/KuZFybjz1hiGeg6FJYiSkcIlutqpWP\n86vsG8Hoo+Dc8zDPl4msPSsxp59BmJnnihA3TuENIC6PPRS16aBAabX4amFlqq5U\nDWFIs3sOzAioWDYzp/A/3Jbw+0Mp55BZRxJwLoEfE1oF4ro2QGblBbyJrvvig3cw\nl9T02u0NTTdYY7mitVoBKnlBEFpjg+vBXSCxawIDAQABAoIBAQCKtjFWAdg12ojM\nDAKQcc1Ayc25DdVuqc85n+owDRXMUOEFZTkWXjC3GwcOclwwodT4ltcN957XWJCP\nWd9nPzhuck8iajG3bhXyKhqRCUvuGEf9XqjrYS9ufaLlc9TC9pj2yHyRLeqypO90\nLFKPZWg40nA+jh4kEc1su6/hmmVrHxwUdf7bdZwYqBW3xedQGWHZtZxmbY8pLT7n\niJnv/EC8mrAQdxiNOcO9z2aWQY14hBsqD2hQkjSSVuhAnzeonU9VrCg0v/VQmX+/\nVhGF48aVQbG1yfh0IxBbX2tbl1tSvh2Vtb6r29mywKRDaKmxRd/Qr6iImSM8A/fz\nm6UpLTzRAoGBAO/zIpxan454J9qh4qaPybhdBwfUMr4HAJtUiWJnLJ2CMvJa8rOA\nXf7QS9ddTE78rUSe1dS2a/RUJ/a1JwI5rj3Un2C9L13YXmWwRHolsjz/lC1pDC87\nsqDG/PT4y5qxQ8r5zJ5+XaJxN37ojtHZipfIYuVAlH+whlInWoUgq6dzAoGBAMJY\niG7sxLx8mXE+U2630HIbTw/jZwKUVPcjMMYDqc97qfDgAVFN3lkKxqHjSW7bUsdF\nDLiwuzlluVuRiAFRFwy256P8yHhfHigCzKuFLGhXuzTGdn7gdvlKsXfgPKOIMcHx\nlpAPU7lIIh3xmoVUWWtHqXGMXqY2Jz3f5BJWWaApAoGAHvAYbFR68iGn8dahpJwx\nhCXqfCXuDPZWK7DwrdFjvUNGUl1Lob1RYUN2I+SRrDWEGa7pHy4OKUiYhoTA7NaH\nEs3RZuW9r7nwIehiS+WEX70MW/aJbaWi2HwPrX5Osjlc5lTi/ySH6iPy5dgSYhhM\neFmL9scm3nfiOcF9OGEIAOUCgYBmrN9nuy81ZZ6rdYIevH4jysm6WynQ8wzwhGcA\nNm9AbtUZrT8E9V7DLC5E2Q+yway6GoDeEoDXkiabegegqnbDAN7ghGxlK9uCx/fZ\npkIP3knJWBDCd1Rj4FJiQtXGj+25ySkCcxaIjNN5fmtkhWu4gePDWaWnqnSQ+/hC\nt9wiAQKBgQCkVuIjhK82p3OJXZPaq8jrGy8hvHM02zj9tZxK98wDApafZBA4VRW+\nKAh7qxM2mhQsDwKplp5noW9pXlQfgBniDmCFK/4xcEaD+UwYF/Ao7RlLjLL2MfsP\n40igT6oadbESZNx815FBttdPkKc3zWRgv40MdZNdTQ9BlShqN9jTQw==\n-----END RSA PRIVATE KEY-----"
+      ca_name: CERT1
+
+  tacacs_providers:
+    - hostname_ip: 2.2.2.2
+      shared_secret: cisco
+
+  login_domains:
+    - name: TACACS1
+      realm: tacacs
+      providers:
+        - hostname_ip: 2.2.2.2
+
+  sites:
+    - name: APIC1
+      apic_urls:
+        - "https://{{ lookup('ansible.builtin.env', 'APIC_HOST') }}"
+      username: '{{ apic_mso_username }}'
+      password: '{{ apic_mso_password }}'
+      id: 1
+      multisite: enabled
+      multicast_tep: 5.6.7.8
+      bgp:
+        as: 65010
+      ospf:
+        area_id: 0
+      routed_domain: ROUTED1
+      ospf_policies:
+        - name: IPN1
+          network_type: point-to-point
+      pods:
+        - id: 1
+          unicast_tep: 3.4.5.6
+          spines:
+            - id: 1001
+              name: SPINE1001
+              control_plane_tep: 100.100.100.1
+              interfaces:
+                - port: 60
+                  ip: 11.11.11.1/24
+                  ospf:
+                    policy: IPN1
+        - id: 2
+          unicast_tep: 3.4.5.7
+
+  tenants:
+    - name: MSO1
+      sites:
+        - name: APIC1
+
+  policies:
+    dhcp_relays:
+      - name: REL1
+        tenant: MSO1
+        providers:
+          - ip: 1.2.3.4
+            tenant: MSO1
+            schema: S1
+            template: TEMPLATE1
+            application_profile: AP1
+            endpoint_group: EPG2

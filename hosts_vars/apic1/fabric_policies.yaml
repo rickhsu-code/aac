@@ -1,0 +1,116 @@
+---
+apic:
+  auto_generate_switch_pod_profiles: true
+  fabric_policies:
+    fabric_bgp_as: 65010
+
+    fabric_bgp_rr:
+      - 1001
+
+    global_settings:
+      remote_leaf_direct: true
+
+    aaa:
+      tacacs_providers:
+        - hostname_ip: 1.1.1.1
+          key: '123'
+          mgmt_epg: oob
+
+      login_domains:
+        - name: TACACS
+          realm: tacacs
+          tacacs_providers:
+            - hostname_ip: 1.1.1.1
+        - name: LOCAL
+          realm: local
+
+    remote_locations:
+      - name: REMOTE1
+        hostname_ip: 1.2.3.4
+        protocol: scp
+        path: '/path'
+        port: 22
+        username: cisco
+        password: cisco
+
+    schedulers:
+      - name: SCHEDULER1
+        recurring_windows:
+          - name: WINDOW1
+            day: Monday
+            hour: 23
+            minute: 1
+
+    config_exports:
+      - name: EXPORT1
+        remote_location: REMOTE1
+        scheduler: SCHEDULER1
+
+    monitoring:
+      snmp_traps:
+        - name: TRAP1
+          destinations:
+            - hostname_ip: 2.2.2.2
+              community: test
+      syslogs:
+        - name: SYSLOG1
+          destinations:
+            - hostname_ip: 2.2.2.2
+
+    pod_policies:
+      date_time_policies:
+        - name: NTP1
+          ntp_admin_state: true
+          ntp_servers:
+            - hostname_ip: 1.1.1.13
+      snmp_policies:
+        - name: SNMP1
+          communities:
+            - abcABC123
+
+    pod_policy_groups:
+      - name: POD1
+        snmp_policy: SNMP1
+        date_time_policy: NTP1
+
+    switch_policies:
+      psu_policies:
+        - name: COMBINED
+          admin_state: combined
+      node_control_policies:
+        - name: DOM_NETFLOW
+          telemetry: netflow
+
+    leaf_switch_policy_groups:
+      - name: ALL_LEAFS
+        psu_policy: COMBINED
+        node_control_policy: DOM_NETFLOW
+
+    spine_switch_policy_groups:
+      - name: ALL_SPINES
+        psu_policy: COMBINED
+        node_control_policy: DOM_NETFLOW
+
+    external_connectivity_policy:
+      name: IPN
+      routing_profiles:
+        - name: IPN1
+          subnets:
+            - 11.1.0.0/16
+
+    vmware_vmm_domains:
+      - name: VMM1
+        vlan_pool: VMM1
+        vswitch:
+          cdp_policy: CDP-ENABLED
+          lldp_policy: LLDP-ENABLED
+          port_channel_policy: LACP-ACTIVE
+        credential_policies:
+          - name: CRED1
+            username: Administrator
+            password: C1sco123
+        vcenters:
+          - name: VC
+            hostname_ip: 10.10.10.10
+            datacenter: DC
+            credential_policy: CRED1

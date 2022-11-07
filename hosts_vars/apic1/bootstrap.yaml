@@ -1,0 +1,6 @@
+---
+apic:
+  bootstrap:
+    admin_username: admin
+    admin_password: C1sco123
+    config_passphrase: C1sco123C1sco123
