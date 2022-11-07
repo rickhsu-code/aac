@@ -16,6 +16,9 @@ apic:
         - name: BD_VLAN102
           vrf: PROD
 
+        - name: BD_VLAN103
+          vrf: PROD
+
       l3outs:
         - name: L3OUT1
           vrf: VRF1
@@ -63,6 +66,11 @@ apic:
 
             - name: EPG_VLAN102
               bridge_domain: BD_VLAN102
+              physical_domains:
+                - PHYSICAL1
+
+            - name: EPG_VLAN103
+              bridge_domain: BD_VLAN103
               physical_domains:
                 - PHYSICAL1
 
