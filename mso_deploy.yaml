@@ -1,0 +1,12 @@
+---
+- name: Deploy MSO model
+  hosts: mso
+  gather_facts: no
+  vars:
+    mso_deploy: True
+
+  tasks:
+    - name: MSO Deploy
+      include_role:
+        name: cisco.aac.mso_deploy
+      when: mso_deploy

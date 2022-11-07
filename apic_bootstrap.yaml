@@ -1,0 +1,12 @@
+---
+- name: APIC Bootstrap
+  hosts: apic
+  gather_facts: no
+  vars:
+    apic_bootstrap: True
+
+  tasks:
+    - name: APIC Bootstrap
+      include_role:
+        name: cisco.aac.apic_bootstrap
+      when: apic_bootstrap

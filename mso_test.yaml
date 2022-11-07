@@ -1,0 +1,12 @@
+---
+- name: MSO Tests
+  hosts: mso
+  gather_facts: no
+  vars:
+    test_mso_deploy: True
+
+  tasks:
+    - name: MSO Deploy Tests
+      include_role:
+        name: cisco.aac.test_mso_deploy
+      when: test_mso_deploy

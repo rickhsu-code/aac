@@ -1,0 +1,331 @@
+---
+kind: pipeline
+name: Deploy
+
+concurrency:
+  limit: 1
+
+environment:
+  # APIC NAE Pre-Change Analysis
+  APIC_NAE_PCA: 'true'
+  # APIC Deploy Stages
+  APIC_SNAPSHOT: 'true'
+  APIC_DEPLOY: 'true'
+  FULL_APIC_DEPLOY: 'true' # If true always deploy everything (no diff)
+  # APIC Test Stages
+  TEST_APIC_DEPLOY: 'true'
+  FULL_APIC_TEST: 'true' # If true always test everything (no diff)
+  # MSO Deploy Stages
+  MSO_DEPLOY: 'true'
+  FULL_MSO_DEPLOY: 'true' # If true always deploy everything (no diff)
+  # MSO Test Stages
+  TEST_MSO_DEPLOY: 'true'
+  FULL_MSO_TEST: 'true' # If true always test everything (no diff)
+
+  CONFIG_REPO_OWNER: 'netascode'
+  CONFIG_REPO_NAME: 'aac-config'
+  PY_COLORS: '1'
+  ANSIBLE_FORCE_COLOR: '1'
+
+trigger:
+  event:
+    exclude:
+      - tag
+
+clone:
+  disable: true
+
+steps:
+  - name: Clone Repo
+    image: drone/git
+    pull: if-not-exists
+
+  - name: Setup
+    image: danischm/aac:0.4.2
+    commands:
+      - ansible-galaxy install -r requirements.yml
+      - mkdir previous
+      - git clone --depth 1 --branch last_deploy https://wwwin-github.cisco.com/${DRONE_REPO_OWNER}/${DRONE_REPO_NAME}.git previous/
+      - git clone "https://wwwin-github.cisco.com/$${CONFIG_REPO_OWNER}/$${CONFIG_REPO_NAME}.git"
+    depends_on:
+      - Clone Repo
+
+  - name: Validate
+    image: danischm/aac:0.4.2
+    environment:
+      ANSIBLE_VAULT_PASSWORD:
+        from_secret: ANSIBLE_VAULT_PASSWORD
+      APIC_HOST:
+        from_secret: APIC_HOST
+      MSO_HOST:
+        from_secret: MSO_HOST
+      NAE_HOST:
+        from_secret: NAE_HOST
+    commands:
+      - export ANSIBLE_CONFIG=$(pwd)/ansible.cfg
+      - set -o pipefail
+      - ansible-playbook -i data/lab/hosts.yaml apic_validate.yaml |& tee validate_output.txt
+      - ansible-playbook -i data/lab/hosts.yaml mso_validate.yaml |& tee validate_output.txt
+    depends_on:
+      - Setup
+
+  - name: Render APIC
+    image: danischm/aac:0.4.2
+    environment:
+      ANSIBLE_VAULT_PASSWORD:
+        from_secret: ANSIBLE_VAULT_PASSWORD
+      APIC_HOST:
+        from_secret: APIC_HOST
+      MSO_HOST:
+        from_secret: MSO_HOST
+      NAE_HOST:
+        from_secret: NAE_HOST
+    commands:
+      - export ANSIBLE_CONFIG=$(pwd)/ansible.cfg
+      - 'echo "previous_inventory: ''./previous/data/lab/''" >> apic_render_vars.yaml'
+      - >
+        if [ "$FULL_APIC_DEPLOY" == "true" ]; then
+          echo "apic_mode: 'all'" >> apic_render_vars.yaml
+        fi
+      - set -o pipefail
+      - ansible-playbook -i data/lab/hosts.yaml -e @apic_render_vars.yaml apic_render.yaml |& tee render_output.txt
+      - >
+        if [ -d "./rendered" ]; then
+          /bin/cp -rf ./rendered/ "./$${CONFIG_REPO_NAME}/"
+        fi
+    depends_on:
+      - Validate
+    when:
+      branch:
+        - master
+
+  - name: NAE PCA
+    image: danischm/aac:0.4.2
+    environment:
+      ANSIBLE_VAULT_PASSWORD:
+        from_secret: ANSIBLE_VAULT_PASSWORD
+      APIC_HOST:
+        from_secret: APIC_HOST
+      MSO_HOST:
+        from_secret: MSO_HOST
+      NAE_HOST:
+        from_secret: NAE_HOST
+      NAE_PASSWORD:
+        from_secret: NAE_PASSWORD
+    commands:
+      - export ANSIBLE_CONFIG=$(pwd)/ansible.cfg
+      - 'echo "apic_nae_pca: $APIC_NAE_PCA" >> apic_nae_vars.yaml'
+      - 'echo "nae_pca_name: \"${DRONE_COMMIT_MESSAGE} #${DRONE_BUILD_NUMBER}\"" >> apic_nae_vars.yaml'
+      - set -o pipefail
+      - ansible-playbook -i data/lab/hosts.yaml -e @apic_nae_vars.yaml apic_nae_pca.yaml |& tee nae_output.txt
+    depends_on:
+      - Render APIC
+    when:
+      branch:
+        - master
+      event:
+        - pull_request
+
+  - name: Deploy APIC
+    image: danischm/aac:0.4.2
+    environment:
+      ANSIBLE_VAULT_PASSWORD:
+        from_secret: ANSIBLE_VAULT_PASSWORD
+      APIC_HOST:
+        from_secret: APIC_HOST
+      MSO_HOST:
+        from_secret: MSO_HOST
+      NAE_HOST:
+        from_secret: NAE_HOST
+    commands:
+      - export ANSIBLE_CONFIG=$(pwd)/ansible.cfg
+      - 'echo "apic_snapshot: $APIC_SNAPSHOT" >> apic_deploy_vars.yaml'
+      - 'echo "apic_deploy: $APIC_DEPLOY" >> apic_deploy_vars.yaml'
+      - 'echo "previous_inventory: ''./previous/data/lab/''" >> apic_deploy_vars.yaml'
+      - >
+        if [ "$FULL_APIC_DEPLOY" == "true" ]; then
+          echo "apic_mode: 'all'" >> apic_deploy_vars.yaml
+        fi
+      - set -o pipefail
+      - ansible-playbook -i data/lab/hosts.yaml -e @apic_deploy_vars.yaml apic_deploy.yaml |& tee deploy_output.txt
+    when:
+      branch:
+        - master
+      event:
+        - push
+    depends_on:
+      - NAE PCA
+      - Render APIC
+
+  - name: Deploy MSO
+    image: danischm/aac:0.4.2
+    environment:
+      ANSIBLE_VAULT_PASSWORD:
+        from_secret: ANSIBLE_VAULT_PASSWORD
+      APIC_HOST:
+        from_secret: APIC_HOST
+      MSO_HOST:
+        from_secret: MSO_HOST
+      NAE_HOST:
+        from_secret: NAE_HOST
+    commands:
+      - export ANSIBLE_CONFIG=$(pwd)/ansible.cfg
+      - 'echo "mso_deploy: $MSO_DEPLOY" >> mso_deploy_vars.yaml'
+      - 'echo "previous_inventory: ''./previous/data/lab/''" >> mso_deploy_vars.yaml'
+      - >
+        if [ "$FULL_MSO_DEPLOY" == "true" ]; then
+          echo "mso_mode: 'all'" >> mso_deploy_vars.yaml
+        fi
+      - set -o pipefail
+      - ansible-playbook -i data/lab/hosts.yaml -e @mso_deploy_vars.yaml mso_deploy.yaml |& tee deploy_output.txt
+    when:
+      branch:
+        - master
+      event:
+        - push
+    depends_on:
+      - Deploy APIC
+
+  - name: Test APIC
+    image: danischm/aac:0.4.2
+    environment:
+      ANSIBLE_VAULT_PASSWORD:
+        from_secret: ANSIBLE_VAULT_PASSWORD
+      APIC_HOST:
+        from_secret: APIC_HOST
+      MSO_HOST:
+        from_secret: MSO_HOST
+      NAE_HOST:
+        from_secret: NAE_HOST
+    commands:
+      - export ANSIBLE_CONFIG=$(pwd)/ansible.cfg
+      - 'echo "test_apic_deploy: $TEST_APIC_DEPLOY" >> apic_test_vars.yaml'
+      - 'echo "previous_inventory: ''./previous/data/lab/''" >> apic_test_vars.yaml'
+      - >
+        if [ "$FULL_APIC_TEST" == "true" ]; then
+          echo "apic_mode: 'all'" >> apic_test_vars.yaml
+        fi
+      - set -o pipefail
+      - ansible-playbook -i data/lab/hosts.yaml -e @apic_test_vars.yaml apic_test.yaml |& tee test_output.txt
+    when:
+      branch:
+        - master
+      event:
+        - push
+    depends_on:
+      - Deploy APIC
+      - Deploy MSO
+
+  - name: Test MSO
+    image: danischm/aac:0.4.2
+    environment:
+      ANSIBLE_VAULT_PASSWORD:
+        from_secret: ANSIBLE_VAULT_PASSWORD
+      APIC_HOST:
+        from_secret: APIC_HOST
+      MSO_HOST:
+        from_secret: MSO_HOST
+      NAE_HOST:
+        from_secret: NAE_HOST
+    commands:
+      - export ANSIBLE_CONFIG=$(pwd)/ansible.cfg
+      - 'echo "test_mso_deploy: $TEST_MSO_DEPLOY" >> mso_test_vars.yaml'
+      - 'echo "previous_inventory: ''./previous/data/lab/''" >> mso_test_vars.yaml'
+      - >
+        if [ "$FULL_MSO_TEST" == "true" ]; then
+          echo "mso_mode: 'all'" >> mso_test_vars.yaml
+        fi
+      - set -o pipefail
+      - ansible-playbook -i data/lab/hosts.yaml -e @mso_test_vars.yaml mso_test.yaml |& tee test_output.txt
+    when:
+      branch:
+        - master
+      event:
+        - push
+    depends_on:
+      - Deploy MSO
+
+  - name: GIT Config Update
+    image: danischm/aac:0.4.2
+    environment:
+      GITHUB_TOKEN:
+        from_secret: GITHUB_TOKEN
+    commands:
+      - cd "$${CONFIG_REPO_NAME}"
+      - git config credential.helper "store --file=.git/credentials"
+      - echo "https://$GITHUB_TOKEN:@wwwin-github.cisco.com" > .git/credentials
+      - git config user.email "$$DRONE_COMMIT_AUTHOR_EMAIL"
+      - git config user.name "$$DRONE_COMMIT_AUTHOR"
+      - git add -A
+      - git commit -a -m "$$DRONE_COMMIT_MESSAGE" --allow-empty
+      - git push
+    when:
+      branch:
+        - master
+      event:
+        - push
+    depends_on:
+      - Deploy APIC
+      - Deploy MSO
+
+  - name: GIT Tag Release
+    image: danischm/aac:0.4.2
+    environment:
+      GITHUB_TOKEN:
+        from_secret: GITHUB_TOKEN
+    commands:
+      - git config credential.helper "store --file=.git/credentials"
+      - echo "https://$GITHUB_TOKEN:@wwwin-github.cisco.com" > .git/credentials
+      - git push --delete origin last_deploy
+      - git tag last_deploy
+      - git push --tags
+    when:
+      branch:
+        - master
+      event:
+        - push
+    depends_on:
+      - GIT Config Update
+      - Test APIC
+      - Test MSO
+
+  - name: Upload Artifacts
+    image: jmccann/drone-artifactory:3.3
+    settings:
+      username: as-deployer
+      password:
+        from_secret: ARTIFACTORY_PASSWORD
+      url: https://engci-maven.cisco.com/artifactory
+      actions:
+        - action: upload
+          path: AS-release/Community/${DRONE_REPO_OWNER}/${DRONE_REPO_NAME}/${DRONE_BUILD_NUMBER}/
+          flat: false
+          sources:
+            - test_results/lab/apic1/*.*
+            - test_results/lab/mso1/*.*
+    when:
+      status: [changed, failure, success]
+      branch:
+        - master
+      event:
+        - push
+    depends_on:
+      - GIT Config Update
+      - Test APIC
+      - Test MSO
+
+  - name: Notify
+    image: danischm/aac:0.4.2
+    environment:
+      WEBEX_TOKEN:
+        from_secret: SPARK_ACCESS_TOKEN
+      WEBEX_ROOM_ID: 'Y2lzY29zcGFyazovL3VzL1JPT00vNTFmMGNmODAtYjI0My0xMWU5LTljZjUtNWY0NGQ2ZTlmYWY0'
+      NAE_HOST:
+        from_secret: NAE_HOST
+    commands:
+      - python3 .ci/webex-notification-drone.py
+    when:
+      status: [changed, failure, success]
+    depends_on:
+      - GIT Tag Release
+      - Upload Artifacts

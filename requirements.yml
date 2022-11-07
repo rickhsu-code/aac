@@ -1,0 +1,5 @@
+---
+collections:
+  - name: https://wwwin-github.cisco.com/aac/ansible-aac.git
+    type: git
+    version: master

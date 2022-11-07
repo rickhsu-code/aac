@@ -1,0 +1,12 @@
+---
+- name: NAE Pre-Change Analysis
+  hosts: apic
+  gather_facts: no
+  vars:
+    apic_nae_pca: True
+
+  tasks:
+    - name: NAE Pre-Change Analysis
+      include_role:
+        name: cisco.aac.apic_nae_pca
+      when: apic_nae_pca

@@ -1,0 +1,15 @@
+---
+- name: Render APIC model
+  hosts: apic
+  gather_facts: no
+  vars:
+    apic_render: True
+    apic_option_render: True
+    apic_option_configure: False
+    apic_option_delete: False
+
+  tasks:
+    - name: APIC Render
+      include_role:
+        name: cisco.aac.apic_deploy
+      when: apic_render

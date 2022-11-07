@@ -1,0 +1,12 @@
+---
+- name: MSO Bootstrap
+  hosts: mso
+  gather_facts: no
+  vars:
+    mso_bootstrap: True
+
+  tasks:
+    - name: MSO Boostrap
+      include_role:
+        name: cisco.aac.mso_bootstrap
+      when: mso_bootstrap

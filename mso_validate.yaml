@@ -1,0 +1,9 @@
+---
+- name: Validate MSO Data
+  hosts: mso
+  gather_facts: no
+
+  tasks:
+    - name: Validate MSO Data
+      include_role:
+        name: cisco.aac.mso_validate
