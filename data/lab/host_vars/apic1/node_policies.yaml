@@ -38,17 +38,6 @@ apic:
         fabric_policy_group: ALL_LEAFS
         access_policy_group: ALL_LEAFS
 
-      - id: 103
-        pod: 1
-        role: leaf
-        serial_number: TEP-1-103
-        name: LEAF103
-        oob_address: 10.51.77.96/24
-        oob_gateway: 10.51.77.254
-        update_group: MG1
-        fabric_policy_group: ALL_LEAFS
-        access_policy_group: ALL_LEAFS
-
       - id: 1001
         pod: 1
         role: spine
