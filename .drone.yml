@@ -7,7 +7,7 @@ concurrency:
 
 environment:
   # APIC NAE Pre-Change Analysis
-  APIC_NAE_PCA: 'true'
+  APIC_NAE_PCA: 'false'
   # APIC Deploy Stages
   APIC_SNAPSHOT: 'true'
   APIC_DEPLOY: 'true'
@@ -16,11 +16,11 @@ environment:
   TEST_APIC_DEPLOY: 'true'
   FULL_APIC_TEST: 'true' # If true always test everything (no diff)
   # MSO Deploy Stages
-  MSO_DEPLOY: 'true'
-  FULL_MSO_DEPLOY: 'true' # If true always deploy everything (no diff)
+  MSO_DEPLOY: 'false'
+  FULL_MSO_DEPLOY: 'false' # If true always deploy everything (no diff)
   # MSO Test Stages
-  TEST_MSO_DEPLOY: 'true'
-  FULL_MSO_TEST: 'true' # If true always test everything (no diff)
+  TEST_MSO_DEPLOY: 'false'
+  FULL_MSO_TEST: 'false' # If true always test everything (no diff)
 
   CONFIG_REPO_OWNER: 'netascode'
   CONFIG_REPO_NAME: 'aac-config'

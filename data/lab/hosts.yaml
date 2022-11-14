@@ -4,10 +4,5 @@ aci:
     apic:
       hosts:
         apic1:
-          apic_host: "{{ lookup('ansible.builtin.env', 'APIC_HOST') }}"
-          ansible_connection: local
-    mso:
-      hosts:
-        mso1:
-          mso_host: "{{ lookup('ansible.builtin.env', 'MSO_HOST') }}"
+          apic_host: 192.168.252.101
           ansible_connection: local
