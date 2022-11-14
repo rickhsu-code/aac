@@ -9,12 +9,12 @@ environment:
   # APIC NAE Pre-Change Analysis
   APIC_NAE_PCA: 'false'
   # APIC Deploy Stages
-  APIC_SNAPSHOT: 'true'
+  APIC_SNAPSHOT: 'false'
   APIC_DEPLOY: 'true'
-  FULL_APIC_DEPLOY: 'true' # If true always deploy everything (no diff)
+  FULL_APIC_DEPLOY: 'false' # If true always deploy everything (no diff)
   # APIC Test Stages
   TEST_APIC_DEPLOY: 'true'
-  FULL_APIC_TEST: 'true' # If true always test everything (no diff)
+  FULL_APIC_TEST: 'false' # If true always test everything (no diff)
   # MSO Deploy Stages
   MSO_DEPLOY: 'false'
   FULL_MSO_DEPLOY: 'false' # If true always deploy everything (no diff)
